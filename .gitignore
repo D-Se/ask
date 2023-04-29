@@ -1,0 +1,25 @@
+.RData
+.Rhistory
+
+# Package build process
+*-Ex.R
+ask_*.tar.gz
+ask.Rcheck
+
+# RStudio IDE files
+.Rproj.user
+ask.Rproj
+
+# object and shared objects
+*.o
+*.so
+*.dll
+
+# temp files
+*~
+.DS_Store
+
+# common devel objects
+.Renviron
+.Rdata
+.httr-oauth
