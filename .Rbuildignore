@@ -3,3 +3,4 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 .lintr
+.github
