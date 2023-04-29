@@ -1,6 +1,10 @@
 # `ask`
 introduces [R][] syntax that maximizes communicative efficiency for control flow and type checks/coercion with sane default settings.
 
+[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![codecov](https://codecov.io/gh/D-Se/ask/branch/main/graph/badge.svg?token=R667MDR4M4)](https://codecov.io/gh/D-Se/ask)
+[![](https://img.shields.io/github/languages/code-size/D-Se/ask.svg)](https://github.com/D-Se/ask)
+
 ## Installation 
 
 ```r
