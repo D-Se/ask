@@ -2,9 +2,9 @@ lhs <- \(f, n = 1) .Call(c_lhs, f, parent.frame(n))
 rhs <- \(f, n = 1) .Call(c_rhs, f, parent.frame(n))
 
 `?` <- function(., query = NULL) {
-	if(is.logical(.)) { #### Control flow ####
+	if (is.logical(.)) { #### Control flow ####
 		if ((l <- length(.)) == 1L) {
-			if(.) lhs(query) else rhs(query)
+			if (.) lhs(query) else rhs(query)
 		} else { # base ifelse
 			if (l < 1000L) {
 				ans <- .
@@ -15,7 +15,7 @@ rhs <- \(f, n = 1) .Call(c_rhs, f, parent.frame(n))
 				if (length(yes) == l) {
 					ans[y] <- yes[y]
 					ans[n] <- no[n]
-				} else{
+				} else {
 					ans[y] <- rep(yes, length.out = l)[y]
 					ans[n] <- rep(no, length.out = l)[n]
 				}
@@ -52,7 +52,6 @@ rhs <- \(f, n = 1) .Call(c_rhs, f, parent.frame(n))
 				cmp = as.complex(.), fct = as.factor(.), env = as.environment(.),
 				plist = as.pairlist(.), tab = as.table(.),
 				date = as.Date(.), hex = as.hexmode(.),
-				# fml = as.formula(., ...),
 				do.call(y, list(.))
 			)
 		)
