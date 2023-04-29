@@ -3,10 +3,13 @@ name: ci
 
 on:
   push:
+    branches:
+      - 'main'
   pull_request:
+    branches:
+      - 'main'
 
 env:
-  USE_BSPM: "true"
   _R_CHECK_FORCE_SUGGESTS_: "false"
 
 jobs:
@@ -14,19 +17,19 @@ jobs:
     strategy:
       matrix:
         include:
-          - {os: macOS-latest}
+          #- {os: macOS-latest}
           - {os: ubuntu-latest}
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Get Script
+        run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
       - name: Bootstrap
-        run: |
-          curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
-          chmod 0755 run.sh
-          ./run.sh bootstrap
+        run: ./run.sh bootstrap
 
       - name: Dependencies
         run: ./run.sh install_all
@@ -34,5 +37,6 @@ jobs:
       - name: Test
         run: ./run.sh run_tests
 
-      - name: Upload coverage reports to Codecov
-      	uses: codecov/codecov-action@v3
+      - name: Coverage
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: ./run.sh coverage
