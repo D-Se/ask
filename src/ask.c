@@ -19,7 +19,7 @@ S rhs(S fml, S rho) {
 	};
 }
 
-SEXP cases(S x, S query, S rho) {
+SEXP cases(S x) {
 	int res = 0;
 	if (IS_SCALAR(x, LGLSXP)) {
 		int cond = NA_LOGICAL;
