@@ -1,33 +1,49 @@
 `:=` <- expect_identical
 error <- expect_error
-true <- expect_true
 
-#### scalar if ####
-(5 > 3 ? TRUE ~ FALSE) := if (5 > 3) TRUE else FALSE
+#### control flow ####
+# Scalar if
+a <- TRUE
+a ? 1 ~ 0
+(TRUE ? 1) := if (TRUE) 1
+(FALSE ? 1) := if (FALSE) 1
 (TRUE ? 1 ~ 0) := if (TRUE) 1 else 0
-error(NA ? 1 ~ 0)
+(!0 ? 1 ~ 0) := if (!0) 1 else 0
+error(NA ? 1 ~ 0, "missing")
+error(NaN ? 1 ~ 0, "Not")
+error(1 ? 1 ~ 0, "Not")
+error(logical() ? 10, "argument")
 
-#### Vector if ####
-(TRUE ? 1 ~ 2) := ifelse(TRUE, 1, 2)
+# Vector if
+b <- c(TRUE, TRUE, FALSE)
+y <- 7:9
+z <- 1:3
+lb <- rep_len(b, 1001)
+fct <- rep_len(factor(1:3, 1:3), 1001)
 
-#local({
-x <<- c(TRUE, TRUE, FALSE)
-y <<- 7:9
-z <<- 1:3
-f <<- \(x) (x > 5 ? TRUE ~ FALSE)
-g <<- \(x) ifelse(x > 5, TRUE, FALSE)
+# preserve attributes
+(b ? y ~ z) := ifelse(b, y, z)
+(b ? sum(y) ~ sum(z)) := ifelse(b, sum(y), sum(z))
+(lb ? fct ~ rev(fct)) := data.table::fifelse(lb, fct, rev(fct))
+(c(TRUE, NA, FALSE) ? 1:3 ~ 7:9) := c(1L, NA_integer_, 9L) # propagate missing
+error(c(NaN, 1) ? 1 ~ 0, "Not")
+#error(c(TRUE, FALSE) ? 1:2 ~ 1:3, "unequal")
 
-(x ? y ~ z) := ifelse(x, y, z)
-(x ? sum(y) ~ sum(z)) := ifelse(x, sum(y), sum(z))
-f(0) := g(3)
-f(6) := g(6)
-dfr <- data.frame(x = letters[1:5], y = 1:5)
+(function(x) (x ? 1 ~ 2))(TRUE) := 1
+dfr <- data.frame(y = 1:2)
 transform(dfr, z = y < 3 ? 5 ~ 1) := transform(dfr, z = ifelse(y < 3, 5, 1))
 
-#### Types ####
+#### Types  ####
 (5 ?~ chr) := as.character(5)
 ("1" ?~ int) := as.integer("1")
 
-test <- NULL
-true(inherits(?integer, "help_files_with_topic")) # exists
-true(inherits(?test, "help_files_with_topic")) # does not exist
+#### help ####
+expect_true(inherits(?integer, "help_files_with_topic")) # exists
+expect_true(inherits(??integer, "hsearch"))
+error(?test, "object") # does not exist
+
+#### internals ####
+ask:::lhs(~2) := NULL
+error(ask:::lhs(`~`(1, 1, 1)), "Malformed")
+ask:::rhs(~2) := ask:::rhs(1 ~ 2)
+error(ask:::rhs(`~`(1, 1, 1)), "Malformed")

@@ -15,16 +15,17 @@ Ask objects about types, control flow and documentation.
 \details{
 \itemize{
 \item \strong{Help}, \code{?topic} \cr
-A modified \link[utils]{Question} that has its second argument dropped in
-favor of other features. Use \code{utils::.(type, topic)} to find S4
-method docs. In other cases regular semantics apply.
+A modified \link[utils]{Question} that drops S4 documentation in favor of
+efficient syntax for common tasks. Use \code{utils::.(type, topic)} to find
+S4 method docs. Otherwise, regular help semantics apply.
 \item \strong{Control flow}, \code{x ? yes ~ no} \cr
-A concise \link[base]{ifelse}, a vectorized-if that runs scalar-if when
-appropriate. Base R recycling is kept.
+Concise control flow. Run scalar-if or \link[base]{ifelse} where appropriate.
+Base R recycling is kept, however, attributes are preserved. Numeric inputs
+are not interpretable as logics.
 \item \strong{Class check}, \code{x ? class} \cr
-Short \link[methods]{is} that asks \emph{is LHS of class RHS?}
+Short \link[methods]{is} asks if LHS is of class RHS.
 \item \strong{Class coercion}, \code{x ?~ class} \cr
-Short form \link[methods]{as} to \emph{coerce LHS to class RHS}.
+Short \link[methods]{as} coerces LHS to class RHS.
 }
 }
 \section{Abbreviations}{
@@ -50,8 +51,14 @@ Class checks and coercions support abbreviated class names.\tabular{cccc}{
 5 ?~ chr
 # scalar-if
 TRUE ? 1 ~ 2
-# vector-if
+# vector-if recycled
 c(TRUE, FALSE) ? 1 ~ 2
 # vector-if by position
 c(TRUE, FALSE) ? c(3, 4) ~ c(5, 6)
+\dontrun{
+# Numeric control flow throw errors
+1 ? 2 ~ 3
+ifelse(NaN, 1, 2)
+if(NaN) 1 else 2
+}
 }

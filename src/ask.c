@@ -1,18 +1,20 @@
 #include <Rinternals.h>
 #define S SEXP
 
-SEXP rhs(SEXP f, SEXP rho) {
-	switch(Rf_length(f)) {
+S lhs(S fml, S rho) {
+	switch(Rf_length(fml)) {
+		case 1: return fml; // if without else
 		case 2: return R_NilValue;
-		case 3: return Rf_eval(CADDR(f), rho);
+		case 3: return Rf_eval(CADR(fml), rho);
 		default: Rf_error("Malformed `~` in `?`");
 	};
 }
 
-SEXP lhs(SEXP f, SEXP rho) {
-	switch(Rf_length(f)) {
-		case 2: return R_NilValue;
-		case 3: return Rf_eval(CADR(f), rho);
+S rhs(S fml, S rho) {
+	switch(Rf_length(fml)) {
+		case 1: return R_NilValue; // void else, invisible is not in the R API.
+		case 2: return Rf_eval(CADR(fml), rho);
+		case 3: return Rf_eval(CADDR(fml), rho);
 		default: Rf_error("Malformed `~` in `?`");
 	};
 }
