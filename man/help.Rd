@@ -20,7 +20,8 @@ efficient syntax for common tasks. Use \code{utils::.(type, topic)} to find
 S4 method docs. Otherwise, regular help semantics apply.
 \item \strong{Control flow}, \code{x ? yes ~ no} \cr
 Concise control flow. Run scalar-if or \link[base]{ifelse} where appropriate.
-Base R recycling is kept, however, attributes are preserved.
+Base R recycling is kept, however, attributes are preserved. Numeric inputs
+are not interpretable as logics.
 \item \strong{Class check}, \code{x ? class} \cr
 Short \link[methods]{is} asks if LHS is of class RHS.
 \item \strong{Class coercion}, \code{x ?~ class} \cr
@@ -54,4 +55,10 @@ TRUE ? 1 ~ 2
 c(TRUE, FALSE) ? 1 ~ 2
 # vector-if by position
 c(TRUE, FALSE) ? c(3, 4) ~ c(5, 6)
+\dontrun{
+# Numeric control flow throw errors
+1 ? 2 ~ 3
+ifelse(NaN, 1, 2)
+if(NaN) 1 else 2
+}
 }
