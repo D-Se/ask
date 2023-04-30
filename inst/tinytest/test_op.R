@@ -5,8 +5,8 @@ error <- expect_error
 # Scalar if
 a <- TRUE
 a ? 1 ~ 0
-(T ? 1) := if(T) 1
-(F ? 1) := if(F) 1
+(TRUE ? 1) := if (TRUE) 1
+(FALSE ? 1) := if (FALSE) 1
 (TRUE ? 1 ~ 0) := if (TRUE) 1 else 0
 (!0 ? 1 ~ 0) := if (!0) 1 else 0
 error(NA ? 1 ~ 0, "missing")
@@ -44,6 +44,6 @@ error(?test, "object") # does not exist
 
 #### internals ####
 ask:::lhs(~2) := NULL
-error(ask:::lhs(`~`(1,1,1)), "Malformed")
-ask:::rhs(~2) := ask:::rhs(1~2)
-error(ask:::rhs(`~`(1,1,1)), "Malformed")
+error(ask:::lhs(`~`(1, 1, 1)), "Malformed")
+ask:::rhs(~2) := ask:::rhs(1 ~ 2)
+error(ask:::rhs(`~`(1, 1, 1)), "Malformed")
