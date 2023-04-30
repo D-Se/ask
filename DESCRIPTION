@@ -10,3 +10,4 @@ Authors@R: person('Donald', 'Seinen',,'2869830202@qq.com', c('aut', 'cre'))
 Maintainer: Donald Seinen <2869830202@qq.com>
 URL: https://github.com/D-Se/ask
 BugReports: https://github.com/D-Se/ask/issues
+RoxygenNote: 7.2.3
