@@ -13,9 +13,9 @@ AbbTable[] = {
 	{(char *)NULL, -1}
 };
 
-SEXPTYPE abb2type(S query) {
+SEXPTYPE abb2type(S fml) {
 	const char *s;
-	s = CHAR(PRINTNAME(query));
+	s = CHAR(PRINTNAME(fml));
 	int i;
 	for (i = 0; AbbTable[i].str; i++) {
 		if (!strcmp(s, AbbTable[i].str))
@@ -24,5 +24,5 @@ SEXPTYPE abb2type(S query) {
 	return (SEXPTYPE) -1;
 }
 
-S is(S x, S query) {return Rf_ScalarLogical(TYPEOF(x) == abb2type(query));}
-S as(S x, S query) {return Rf_coerceVector(x, abb2type(query));}
+S is(S x, S fml) {return Rf_ScalarLogical(TYPEOF(x) == abb2type(fml));}
+S as(S x, S fml) {return Rf_coerceVector(x, abb2type(fml));}

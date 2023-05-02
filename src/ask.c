@@ -18,14 +18,25 @@ static inline S rhs(S fml, S rho) {
 	}
 }
 
+inline S scalar_if(S x, S fml, S rho) {
+	int cond = NA_LOGICAL;
+	cond = *LOGICAL(x);
+	if (cond == NA_LOGICAL) {Rf_error("missing value where T/F needed");}
+	return cond ? lhs(fml, rho) : rhs(fml, rho);
+}
+
+inline S vector_if(S x, S fml, S rho) {
+	return R_NilValue;
+}
+
 S ask(S x, S fml, S rho) {
-	S res = R_NilValue;
 	if (TYPEOF(x) == LGLSXP) {
-		res = LENGTH(x) == 1 ?
-			scalar_if(x, fml, rho) :
+		return LENGTH(x) == 1 ?
+			scalar_if(x, fml, rho):
 			vector_if(x, fml, rho);
+	} else {
+		return is(x, fml);
 	}
-	return res;
 }
 
 static const R_CallMethodDef entries[] = {
