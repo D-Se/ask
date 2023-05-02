@@ -1,27 +1,35 @@
-#include <Rinternals.h>
-#define S SEXP
+#include "ask.h"
 
-S lhs(S fml, S rho) {
+static inline S lhs(S fml, S rho) {
 	switch(Rf_length(fml)) {
-		case 1: return fml; // if without else
-		case 2: return R_NilValue;
-		case 3: return Rf_eval(CADR(fml), rho);
-		default: Rf_error("Malformed `~` in `?`");
+	case 1: return fml; // if without else
+	case 2: return R_NilValue;
+	case 3: return Rf_eval(CADR(fml), rho);
+	default: Rf_error("Malformed `~` in `?`");
 	};
 }
 
-S rhs(S fml, S rho) {
+static inline S rhs(S fml, S rho) {
 	switch(Rf_length(fml)) {
-		case 1: return R_NilValue; // void else, invisible is not in the R API.
-		case 2: return Rf_eval(CADR(fml), rho);
-		case 3: return Rf_eval(CADDR(fml), rho);
-		default: Rf_error("Malformed `~` in `?`");
-	};
+	case 1: return R_NilValue; // void else, invisible is not in the R API.
+	case 2: return Rf_eval(CADR(fml), rho);
+	case 3: return Rf_eval(CADDR(fml), rho);
+	default: Rf_error("Malformed `~` in `?`");
+	}
+}
+
+S ask(S x, S fml, S rho) {
+	S res = R_NilValue;
+	if (TYPEOF(x) == LGLSXP) {
+		res = LENGTH(x) == 1 ?
+			scalar_if(x, fml, rho) :
+			vector_if(x, fml, rho);
+	}
+	return res;
 }
 
 static const R_CallMethodDef entries[] = {
-	{"c_lhs", (DL_FUNC) &lhs, 2},
-	{"c_rhs", (DL_FUNC) &rhs, 2},
+	{"c_ask", (DL_FUNC) &ask, 3},
 	{NULL, NULL, 0}
 };
 
