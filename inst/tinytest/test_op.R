@@ -30,6 +30,7 @@ error(c(NaN, 1) ? 1 ~ 0, "Not")
 #error(c(TRUE, FALSE) ? 1:2 ~ 1:3, "unequal")
 
 (function(x) (x ? 1 ~ 2))(TRUE) := 1
+(function(x, y, z) (x ? y ~ z))(FALSE, 1, 2) := 2
 dfr <- data.frame(y = 1:2)
 transform(dfr, z = y < 3 ? 5 ~ 1) := transform(dfr, z = ifelse(y < 3, 5, 1))
 
