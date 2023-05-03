@@ -35,12 +35,32 @@ S ask(S x, S fml, S rho) {
 			scalar_if(x, fml, rho):
 			vector_if(x, fml, rho);
 	} else {
-		return is(x, fml);
+		switch(TYPEOF(fml)) {
+		case SYMSXP: return Rf_ScalarLogical(TRUE);
+		case LANGSXP: return Rf_ScalarLogical(FALSE);
+		default: return R_NilValue;
+		}
+		/*
+		* 1. prevent evaluation of fml (substitute fml)
+		* 2. isNull() ? is : as
+		*/
+		// S query;
+		// query = Rf_substitute(fml, rho);
+		// return isNull(query) ?
+		// 	is(x, query):
+		// 	as(x, query);
 	}
+}
+
+S control_flow(S x, S fml, S rho) {
+	return LENGTH(x) == 1 ?
+		scalar_if(x, fml, rho):
+		vector_if(x, fml, rho);
 }
 
 static const R_CallMethodDef entries[] = {
 	{"c_ask", (DL_FUNC) &ask, 3},
+	{"c_cf", (DL_FUNC) &ask, 3},
 	{NULL, NULL, 0}
 };
 

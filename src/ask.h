@@ -2,7 +2,7 @@
 #include <Rinternals.h>
 #include <stdbool.h>
 #define S SEXP
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))
+//#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))
 
 S ask(S, S, S);
 S scalar_if(S, S, S);
