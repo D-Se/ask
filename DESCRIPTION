@@ -3,7 +3,7 @@ Version: 0.0.1
 Title: Control flow and type operator for R
 Description: Combine `?` and `~` for convenient syntax.
 License: MIT + file LICENSE
-Imports: data.table, utils
+Imports: utils
 Suggests: tinytest
 Encoding: UTF-8
 Authors@R: person('Donald', 'Seinen',,'2869830202@qq.com', c('aut', 'cre'))

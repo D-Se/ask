@@ -1,6 +1,6 @@
 # `ask`
-introduces [R][] syntax that maximizes communicative efficiency for control flow 
-and type checks/coercion with sane default settings.
+[R][] syntax for fast and convenient control flow and type checks/coercion.
+Code is maximized for thought-to-code.
 
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![codecov](https://codecov.io/gh/D-Se/ask/branch/main/graph/badge.svg?token=R667MDR4M4)](https://codecov.io/gh/D-Se/ask)
@@ -14,7 +14,7 @@ remotes::install_github("D-Se/ask")
 
 ## Usage
 
-1. Run scalar or (fast) vectorized control flow
+1. Run scalar or (fast) vectorized control flow, recycling where needed.
 ```r
 5 > 3 ? "a" ~ "b"
 1:5 > 3 ? "a" ~ "b"
@@ -32,5 +32,7 @@ remotes::install_github("D-Se/ask")
 # as.character(5)
 5 ?~ chr
 ```
+## Performance
+To run the benchmarks, `git clone` this repo and run `make()` within R.
 
 [R]: https://www.r-project.org/
