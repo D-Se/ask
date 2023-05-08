@@ -78,6 +78,7 @@ static inline S vector_if(S x, S fml, S rho) {
 	SEXPTYPE tans = ta;
 
 	// omit length check to support nested (case_when) behavior.
+	if (la != lb) Rf_error("Length mismatch of lhs and rhs.");
 	if (ta != tb) Rf_error("Type mismatch of lhs and rhs.");
 
 	bool naa = la == 1 && ta == LGLSXP && LOGICAL(a)[0] == NA_LOGICAL;
@@ -132,5 +133,9 @@ static inline S vector_if(S x, S fml, S rho) {
 }
 
 S ifelse(S x, S fml, S rho) {
-	return Rf_xlength(x) == 1 ? scalar_if(x, fml, rho) : vector_if(x, fml, rho);
+	switch(Rf_xlength(x)) {
+	case 0: Rf_error("Length zero argument.");
+	case 1: return scalar_if(x, fml, rho);
+	default: return vector_if(x, fml, rho);
+	}
 }

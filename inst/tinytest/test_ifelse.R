@@ -9,8 +9,9 @@ a ? 1 ~ 0
 (TRUE ? 1 ~ 0) := if (TRUE) 1 else 0
 (!0 ? 1 ~ 0) := if (!0) 1 else 0
 error(NA ? 1 ~ 0, "Missing")
-error(logical() ? 10, "Type")
-
+error(logical() ? 10, "Length zero")
+error(c(TRUE, FALSE) ? c(1,0) ~ c("a", "b"), "Type")
+error(c(TRUE, FALSE) ? 1:2 ~ 1, "Length mismatch")
 
 #### vector_if ####
 b <- c(TRUE, TRUE, FALSE)

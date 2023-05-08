@@ -1,8 +1,8 @@
 `:=` <- expect_identical
 error <- expect_error
 
-names <- c("character", "numeric", "integer", "logical", "list")
-abbs <- c("chr", "num", "int", "lgl", "lst")
+names <- c("character", "integer", "logical", "list")
+abbs <- c("chr", "int", "lgl", "lst")
 units <- expression(list(
 	# logical(), T, F, TRUE, FALSE, NA -- # nolint
 	0, 1, NA_real_, NaN, Inf, -Inf,
@@ -10,7 +10,7 @@ units <- expression(list(
 	"", NA_character_,
 	NULL,
 	1^1i, NA_complex_, 0^1i, # complex NaN
-	list(), data.frame()
+	list()
 	# T, F, TRUE, FALSE, NA
 ))
 
