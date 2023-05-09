@@ -3,7 +3,7 @@
 
 `?` <- \(x, y = NULL) {
 	if (is.logical(x)) {
-		.Call(ifelse, x, y, parent.frame(), PACKAGE = "ask")
+		.Call(ifelse, x, y, PACKAGE = "ask")
 	} else if (is.null(y <- substitute(y))) {
 		do.call(utils::`?`, list(substitute(x)))
 	} else {
