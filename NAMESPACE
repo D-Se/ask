@@ -1,4 +1,3 @@
 useDynLib(ask, .registration=TRUE)
 export("?")
-export("set_threads")
-export("set_threads")
+export("ask")

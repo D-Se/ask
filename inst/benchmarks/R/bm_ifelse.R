@@ -42,7 +42,7 @@ guard_vec <- \(x, truth) {
 
 vec_ask <- function(data, times = FALSE, threads = FALSE, batch = FALSE, ...) {
 	# API not clearly defined yet
-	if(threads) ask:::set_threads(threads) else ask:::set_threads(1)
+	if(threads) ask(threads) else ask(1)
 	if(!times) define_times(length(data[["x"]]), ...)
 	local(guard_vec(x ? y ~ z, truth), data)
 	if(batch) return()

@@ -5,12 +5,12 @@
 Ask objects about types, control flow and documentation.
 }
 \usage{
-. ? query
+x ? y
 }
 \arguments{
-\item{.}{an object}
+\item{x}{[ lgl, any ] An \R object to ask questions about.}
 
-\item{query}{a command}
+\item{y}{[ fml, nil ] An action specification, possibly using abbreviations.}
 }
 \details{
 \itemize{
@@ -51,6 +51,9 @@ Class checks and coercions support abbreviated class names.\tabular{cccc}{
 5 ?~ chr
 # scalar-if
 TRUE ? 1 ~ 2
+# scalar-if, no else
+TRUE ? 1
+FALSE ? 2
 # vector-if recycled
 c(TRUE, FALSE) ? 1 ~ 2
 # vector-if by position

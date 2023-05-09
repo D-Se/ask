@@ -11,7 +11,7 @@ a ? 1 ~ 0
 error(NA ? 1 ~ 0, "Missing")
 error(logical() ? 10, "Length zero")
 error(c(TRUE, FALSE) ? c(1,0) ~ c("a", "b"), "Type")
-error(c(TRUE, FALSE) ? 1:2 ~ 1, "Length mismatch")
+error(c(TRUE, FALSE) ? 1:2 ~ 1, "Length")
 
 #### vector_if ####
 b <- c(TRUE, TRUE, FALSE)

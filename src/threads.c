@@ -11,10 +11,9 @@ static int getIntEnv(const char * name, int def) {
 	size_t nchar = strlen(val);
 	if (nchar == 0) return def;
 	char * end;
-	errno = 0;
 	long int ans = strtol(val, & end, 10);
 	while (isspace( * end)) end++;
-	if (errno || (size_t)(end - val) != nchar || ans < 1 || ans > INT_MAX) {
+	if ((size_t)(end - val) != nchar || ans < 1 || ans > INT_MAX) {
 		Rf_warning("Invalid digit.");
 		return def;
 	}
