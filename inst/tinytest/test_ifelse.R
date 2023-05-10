@@ -15,8 +15,8 @@ error(c(TRUE, FALSE) ? 1:2 ~ 1, "Length")
 
 #### vector_if ####
 b <- c(TRUE, TRUE, FALSE)
-y <- 7:9
-z <- 1:3
+y <<- 7:9
+z <<- 1:3
 lb <- rep_len(b, 1001)
 fct <- rep_len(factor(1:3, 1:3), 1001)
 

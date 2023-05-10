@@ -26,7 +26,7 @@ void init_ask_threads(void);
 
 // Ask API
 S isas(S, S);
-S ifelse(S, S, S);
+S ifelse(S, S);
 S get_threads_R(void);
 S set_threads(S, S, S);
 
