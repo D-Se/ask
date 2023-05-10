@@ -7,13 +7,13 @@
 #include <stdlib.h>
 
 #ifdef _OPENMP
-	#include <omp.h> // -fopenmp by Makevars files
-	#define OMP_FOR(lx) _Pragma("omp parallel for num_threads(get_threads(lx, true))")
+  #include <omp.h> // -fopenmp by Makevars files
+  #define OMP_FOR(lx) _Pragma("omp parallel for num_threads(get_threads(lx, true))")
 #else
-	#define omp_get_max_threads()  1
-	#define omp_get_thread_limit() 1
-	#define omp_get_num_procs()    1
-	#define OMP_FOR(lx)
+  #define omp_get_max_threads()  1
+  #define omp_get_thread_limit() 1
+  #define omp_get_num_procs()    1
+  #define OMP_FOR(lx)
 #endif
 
 #include <Rinternals.h>
