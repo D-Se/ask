@@ -10,7 +10,7 @@ a ? 1 ~ 0
 (!0 ? 1 ~ 0) := if (!0) 1 else 0
 error(NA ? 1 ~ 0, "Missing")
 error(logical() ? 10, "Length zero")
-error(c(TRUE, FALSE) ? c(1,0) ~ c("a", "b"), "Type")
+error(c(TRUE, FALSE) ? c(1, 0) ~ c("a", "b"), "Type")
 error(c(TRUE, FALSE) ? 1:2 ~ 1, "Length")
 
 #### vector_if ####
@@ -24,7 +24,7 @@ fct <- rep_len(factor(1:3, 1:3), 1001)
 (b ? y ~ z) := ifelse(b, y, z)
 (b ? sum(y) ~ sum(z)) := ifelse(b, sum(y), sum(z))
 attributes(lb ? fct ~ rev(fct)) :=
-	list(class = "factor", levels = c("1", "2", "3"))
+  list(class = "factor", levels = c("1", "2", "3"))
 
 (c(TRUE, NA, FALSE) ? 1:3 ~ 7:9) := c(1L, NA_integer_, 9L) # propagate missing
 

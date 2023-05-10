@@ -1,2 +1,0 @@
-linters: linters_with_defaults(no_tab_linter = NULL)
-encoding: "UTF-8"
