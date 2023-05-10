@@ -1,28 +1,28 @@
 #include "ask.h"
 
-static inline S lhs(S fml, S rho) {
+static inline S lhs(S fml) {
 	switch(Rf_length(fml)) {
 	case 1: return fml; // if, no else
 	case 2: return R_NilValue;
-	case 3: return Rf_eval(CADR(fml), rho);
+	case 3: return Rf_eval(CADR(fml), R_GetCurrentEnv());
 	default: Rf_error("Malformed `~` in `?`.");
 	};
 }
 
-static inline S rhs(S fml, S rho) {
+static inline S rhs(S fml) {
 	switch(Rf_length(fml)) {
 	case 1: return R_NilValue; // void else
-	case 2: return Rf_eval(CADR(fml), rho); // ~x
-	case 3: return Rf_eval(CADDR(fml), rho); // x ~ y
+	case 2: return Rf_eval(CADR(fml), R_GetCurrentEnv()); // ~x
+	case 3: return Rf_eval(CADDR(fml), R_GetCurrentEnv()); // x ~ y
 	default: Rf_error("Malformed `~` in `?`.");
 	}
 }
 
-static inline S scalar_if(S x, S fml, S rho) {
+static inline S scalar_if(S x, S fml) {
 	int cond = NA_LOGICAL;
 	cond = *LOGICAL(x);
 	if (cond == NA_LOGICAL) Rf_error("Missing value where T/F needed");
-	return cond ? lhs(fml, rho) : rhs(fml, rho);
+	return cond ? lhs(fml) : rhs(fml);
 }
 
 // pseudo-generic loop body macro to make loop_TYPE
@@ -62,10 +62,10 @@ loop_core(NUM, double, REAL, 	  NA_REAL)
 Rcomplex temp() {Rcomplex x = {.r = NA_REAL, .i = NA_REAL}; return x;}
 loop_core(CPL, Rcomplex, COMPLEX, temp())
 
-static inline S vector_if(S x, S fml, S rho) {
+static inline S vector_if(S x, S fml) {
 	// l - length, p - pointer, t - type, m - mask
-	const S a = PROTECT(lhs(fml, rho)),
-					b = PROTECT(rhs(fml, rho));
+	const S a = PROTECT(lhs(fml)),
+					b = PROTECT(rhs(fml));
 
 	const int64_t lx = Rf_xlength(x),
 								la = Rf_xlength(a),
@@ -130,10 +130,10 @@ static inline S vector_if(S x, S fml, S rho) {
 	return ans;
 }
 
-S ifelse(S x, S fml, S rho) {
+S ifelse(S x, S fml) {
 	switch(Rf_xlength(x)) {
 	case 0: Rf_error("Length zero argument.");
-	case 1: return scalar_if(x, fml, rho);
-	default: return vector_if(x, fml, rho);
+	case 1: return scalar_if(x, fml);
+	default: return vector_if(x, fml);
 	}
 }

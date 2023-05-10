@@ -37,6 +37,8 @@ list(
 	tar_target(v_chr1_s_t0_l1, batch_ifelse(500, "chr", length = 1)),
 	tar_target(v_chr1_s_t0_l5, batch_ifelse(500, "chr", length = 5)),
 
+	tar_target(scalar_if, ask_if()),
+
 	tar_target(v_num_s_tF, batch_ifelse(500, "num")),
 	tar_target(v_num_s_t4, batch_ifelse(500, "num", threads = 4)),
 	tar_target(v_num_l_tF, batch_ifelse(1e6, "num")),
