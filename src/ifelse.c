@@ -1,30 +1,41 @@
 #include "ask.h"
 
+static inline bool IsFormula(SEXP x) {
+  return TYPEOF(x) == LANGSXP && Rf_inherits(x, "formula");
+}
+
 static inline S ENV(S fml) {
   return Rf_getAttrib(fml, Rf_install(".Environment"));
 }
 
 static inline S lhs(S fml) {
-  switch(Rf_length(fml)) {
-  case 1: return fml; // if, no else
-  case 2: return R_NilValue;
-  case 3: return Rf_eval(CADR(fml), ENV(fml));
-  default: Rf_error("Malformed `~` in `?`.");
-  };
+  if (IsFormula(fml)) {
+    switch(Rf_length(fml)) {
+    case 2: return R_NilValue; // F ?~ 1
+    case 3: return Rf_eval(CADR(fml), ENV(fml)); // T ? x ~ y
+    default: Rf_error("Malformed `~` in `?`.");
+    };
+  } else {
+    return fml; // T ? 1, default NULL rhs value from R `?`
+  }
 }
 
 static inline S rhs(S fml) {
-  switch(Rf_length(fml)) {
-  case 1: return R_NilValue; // void else
-  case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
-  case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
-  default: Rf_error("Malformed `~` in `?`.");
+  if (IsFormula(fml)) {
+    switch(Rf_length(fml)) {
+    //case 1: return R_NilValue; // void else
+    case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
+    case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
+    default: Rf_error("Malformed `~` in `?`.");
+    };
+  } else {
+    return R_NilValue;
   }
 }
 
 static inline S scalar_if(S x, S fml) {
   int cond = NA_LOGICAL;
-  cond = *LOGICAL(x);
+  cond = LOGICAL(x)[0];
   if (cond == NA_LOGICAL) Rf_error("Missing value where T/F needed");
   return cond ? lhs(fml) : rhs(fml);
 }
