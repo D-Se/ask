@@ -21,6 +21,6 @@ ask <- function(threads = NULL, pct = NULL) {
     if (is.na(pct) || pct < 2L || pct > 100L) stop("pct in [2, 100] please.")
     .Call(c_set_threads, pct, TRUE, integer(0)) |> invisible()
   } else {
-    .Call(c_set_threads, as.integer(threads), FALSE, integer(0))
+    .Call(c_set_threads, as.integer(threads), FALSE, integer(0)) |> invisible()
   }
 }

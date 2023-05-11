@@ -68,4 +68,5 @@ for (i in seq_len(nrow(ask_as))) {
 }
 
 (1 ?~ "") := "1"
+(NULL ? 1) := FALSE
 error(1 ?~ huh, "Abbreviation")
