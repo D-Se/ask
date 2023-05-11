@@ -2,7 +2,7 @@
 
 static const R_CallMethodDef entries[] = {
   {"isas", (DL_FUNC) &isas, 2},
-  {"ifelse", (DL_FUNC) &ifelse, 3},
+  {"ifelse", (DL_FUNC) &ifelse, 2},
   {"c_set_threads", (DL_FUNC) &set_threads, -1},
   {"c_get_threads", (DL_FUNC) &get_threads_R, -1},
   {NULL, NULL, 0}
