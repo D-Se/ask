@@ -20,7 +20,7 @@ SEXPTYPE abb2type(S abb) {
     if (!strcmp(s, AbbCoerceTable[i].abb))
       return (SEXPTYPE) AbbCoerceTable[i].type;
   }
-  Rf_errorcall(R_NilValue, "Abbreviation not found"); // x ?~ blabla
+  Rf_errorcall(R_NilValue, "Abbreviation not found"); // x ?~ bla
   //return (SEXPTYPE) -1;
 }
 
@@ -40,8 +40,8 @@ static inline S as(S x, S fml) {
 
 S isas(S x, S fml) {
   switch(TYPEOF(fml)) {
-  case SYMSXP: return is(x, fml); // x ? .
-  case LANGSXP: return as(x, fml); // x ?~ .
-  default: return R_NilValue;
+  case SYMSXP: return is(x, fml);
+  case LANGSXP: return as(x, fml);
+  default: return Rf_ScalarLogical(0); // NULL ? NULL opens help, always false
   }
 }
