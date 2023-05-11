@@ -66,3 +66,6 @@ for (i in seq_len(nrow(ask_as))) {
     ask_as[i, j] := base_as[i, j]
   }
 }
+
+(1 ?~ "") := "1"
+error(1 ?~ huh, "Abbreviation")
