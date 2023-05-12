@@ -13,7 +13,7 @@ static inline S lhs(S fml) {
     switch(Rf_length(fml)) {
     case 2: return R_NilValue; // F ?~ 1
     case 3: return Rf_eval(CADR(fml), ENV(fml)); // T ? x ~ y
-    default: Rf_error("Malformed `~` in `?`.");
+    default: err("Malformed `~` in `?`.");
     };
   } else {
     return fml; // T ? 1, default NULL rhs value from R `?`
@@ -26,7 +26,7 @@ static inline S rhs(S fml) {
     //case 1: return R_NilValue; // void else
     case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
     case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
-    default: Rf_error("Malformed `~` in `?`.");
+    default: err("Malformed `~` in `?`.");
     };
   } else {
     return R_NilValue;
@@ -36,7 +36,7 @@ static inline S rhs(S fml) {
 static inline S scalar_if(S x, S fml) {
   int cond = NA_LOGICAL;
   cond = LOGICAL(x)[0];
-  if (cond == NA_LOGICAL) Rf_error("Missing value where T/F needed");
+  if (cond == NA_LOGICAL) err("Missing value where T/F needed");
   return cond ? lhs(fml) : rhs(fml);
 }
 
@@ -90,8 +90,8 @@ static inline S vector_if(S x, S fml) {
                  tb = TYPEOF(b);
 
   // omit length check to support nested (case_when) behavior.
-  if (la != lb) Rf_error("Mismatch lhs and rhs: Length.");
-  if (ta != tb) Rf_error("Mismatch lhs and rhs: Type.");
+  if (la != lb) err("Mismatch lhs and rhs: Length.");
+  if (ta != tb) err("Mismatch lhs and rhs: Type.");
 
   const bool naa = la == 1 && ta == LGLSXP && LOGICAL(a)[0] == NA_LOGICAL,
              nab = lb == 1 && tb == LGLSXP && LOGICAL(b)[0] == NA_LOGICAL,
@@ -137,7 +137,7 @@ static inline S vector_if(S x, S fml) {
     }
   } break;
   default:
-    Rf_error("Unsupported lhs or rhs type.");
+    err("Unsupported lhs or rhs type.");
   }
   S names = PROTECT(getAttrib(x, R_NamesSymbol));
   if (!isNull(names)) setAttrib(ans, R_NamesSymbol, names);
@@ -147,7 +147,7 @@ static inline S vector_if(S x, S fml) {
 
 S ifelse(S x, S fml) {
   switch(LENGTH(x)) {
-  case 0: Rf_error("Length zero argument.");
+  case 0: err("Length zero argument.");
   case 1: return scalar_if(x, fml);
   default: return vector_if(x, fml);
   }

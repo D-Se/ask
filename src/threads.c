@@ -60,7 +60,7 @@ S get_threads_R() {
 S set_threads(S threads, S percent, S throttle) {
   if (length(throttle)) {
     if (!isInteger(throttle) || LENGTH(throttle) != 1 || INTEGER(throttle)[0] < 1)
-      Rf_errorcall(R_NilValue, "Invalid throttle value.");
+      err("Invalid throttle value.");
     ask_throttle = INTEGER(throttle)[0];
   }
   int old = ask_threads;
@@ -69,11 +69,11 @@ S set_threads(S threads, S percent, S throttle) {
   } else if (length(threads)) {
     int n = 0;
     if (length(threads) != 1 || !isInteger(threads) || (n = INTEGER(threads)[0]) < 0) {
-      Rf_error("Valid thread values: NULL, n >= 0.");
+      err("Valid thread values: NULL, n >= 0.");
     }
     int num_procs = imax(omp_get_num_procs(), 1);
     if (LOGICAL(percent)[0]) {
-      if (n < 2 || n > 100) Rf_error("Supply threads in [2, 100]"); // # nocov
+      if (n < 2 || n > 100) err("Supply threads in [2, 100]"); // # nocov
       n = num_procs * n / 100;
     } else {
       if (n == 0 || n > num_procs) n = num_procs;
