@@ -6,3 +6,4 @@
 .github
 inst/benchmarks
 _targets.yaml
+^cran-comments\.md$

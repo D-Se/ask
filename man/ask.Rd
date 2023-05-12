@@ -17,8 +17,8 @@ A \code{0}-value signals to use everything.}
 \examples{
 # how many threads are used?
 ask()
-\dontrun{
-# use everything available
-ask(0)
 }
+\value{
+scalar [int], the maximum number of OpenMP thread to use. \cr
+[nil] if arguments are passed, setting the internal OpenMP values.
 }

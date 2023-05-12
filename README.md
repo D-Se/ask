@@ -1,13 +1,16 @@
 # `ask`
-[R][] syntax for convenient control flow and type checks/coercion for fast thought-to-code. Fewer syntax errors, less debugging, faster data science.
+Syntax for convenient control flow and type checks/coercion for fast thought-to-code. Fewer syntax errors, less debugging, faster data science.
 
+<!-- badges: start -->
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![codecov](https://codecov.io/gh/D-Se/ask/branch/main/graph/badge.svg?token=R667MDR4M4)](https://codecov.io/gh/D-Se/ask)
+[![](https://codecov.io/gh/D-Se/ask/branch/main/graph/badge.svg)](https://app.codecov.io/gh/D-Se/ask?branch=main)
 [![](https://img.shields.io/github/languages/code-size/D-Se/ask.svg)](https://github.com/D-Se/ask)
+<!-- badges: end -->
 
 ## Installation 
 
 ```r
+install.packages("ask")
 remotes::install_github("D-Se/ask")
 ```
 
@@ -17,7 +20,7 @@ remotes::install_github("D-Se/ask")
 ```
 e = logical(0)
 ```
-| ask                	| base                    	| [tidy][]                     	| [fast][]                     	|
+| ask                	| base                    	| tidy                         	| fast                        	|
 |--------------------	|-------------------------	|------------------------------	|------------------------------	|
 | `T ? 1`            	| `if(T) 1`               	| -                            	| -                            	|
 | `T ? 1 ~ 2`        	| `if(T) 1 else 2`        	| `if_else(T, 1, 2)`           	| `fifelse(T, 1, 2)`           	|
@@ -30,7 +33,7 @@ t <- c(T, F, NA)
 x <- 1:3
 y <- c(7, 8, 9)
 ```
-| ask               	| base              	| [tidy][]           	| [fast][]           	|
+| ask               	| base              	| tidy              	| fast              	|
 |-------------------	|-------------------	|--------------------	|--------------------	|
 | `t ? 1 ~ 2`       	| `ifelse(t, 1, 2)` 	| `if_else(t, 1, 2)` 	| `fifelse(t, 1, 2)` 	|
 | `t ? x ~ y` [err] 	| `ifelse(t, x, y)` 	| `if_else(t, x, y)` 	| `fifelse(t, x, y)` 	|
@@ -57,7 +60,3 @@ y <- c(7, 8, 9)
 To compare `ask` performance:  
 1. `git clone` this repo,  
 2. Within R, run `make()`.
-
-[R]: https://www.r-project.org/
-[tidy]: https://www.tidyverse.org/
-[fast]: https://github.com/fastverse/fastverse

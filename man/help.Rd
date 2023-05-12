@@ -1,6 +1,6 @@
 \name{?}
 \alias{?}
-\title{Ask}
+\title{?: conditions, types and documentation shortcuts}
 \description{
 Ask objects about types, control flow and documentation.
 }
@@ -8,9 +8,8 @@ Ask objects about types, control flow and documentation.
 x ? y
 }
 \arguments{
-\item{x}{[ lgl, any ] An \R object to ask questions about.}
-
-\item{y}{[ fml, nil ] An action specification, possibly using abbreviations.}
+\item{x}{[lgl, any], an \R object to ask questions about.}
+\item{y}{[fml, nil], an action specification, possibly using abbreviations.}
 }
 \details{
 \itemize{
@@ -18,14 +17,14 @@ x ? y
 A modified \link[utils]{Question} that drops S4 documentation in favor of
 efficient syntax for common tasks. Use \code{utils::.(type, topic)} to find
 S4 method docs. Otherwise, regular help semantics apply.
-\item \strong{Control flow}, \code{x ? yes ~ no} \cr
-Concise control flow. Run scalar-if or \link[base]{ifelse} where appropriate.
+\item \strong{Control flow}, \code{x ? yes ~ no, x ? yes, x ?~ no} \cr
+Run scalar-if or \link[base]{ifelse} where appropriate.
 Base R recycling is kept, however, attributes are preserved. Numeric inputs
 are not interpretable as logics, and strict type checking is applied.
 \item \strong{Type check}, \code{x ? type} \cr
-Short \link[methods]{is} asks if LHS is of type RHS.
-\item \strong{Type coercion}, \code{x ?~ type} \cr
-Short \link[methods]{as} coerces LHS to type RHS.
+For non-logical \code{x}, short \link[methods]{is} asks if LHS is of type RHS.
+\item \strong{Type coercion}, \code{x ?~ type, x ?~ abb} \cr
+For non-logical \code{x}, short \link[methods]{as} coerces LHS to type RHS.
 }
 }
 \section{Abbreviations}{
@@ -42,18 +41,41 @@ Class checks and coercions support abbreviated type names.\tabular{llll}{
    dbl \tab     \tab fml \tab tab \cr
 }
 }
-
 \examples{
 # type checks and coercion
 5 ? chr
 5 ?~ chr
+5 ?~ ""
 
 # scalar-if
 TRUE ? 1 ~ 2
 TRUE ? 1
 FALSE ? 2
+FALSE ?~ 2
 
-# vector-if recycled and by position
+# vector-if, recycled and by position
 c(TRUE, FALSE) ? 1 ~ 2
 c(TRUE, FALSE) ? c(3, 4) ~ c(5, 6)
+
+# nested, top-down evaluation
+x = c(TRUE, FALSE, NA)
+a = 1:3; b = 4:6; c = 7:9
+x ? a ~ {
+  !x ? b ~ c
+}
+
+# all queries must be of the same length and type
+try(x ? a ~ {!x ? b ~ NA_integer_})
+try(x ? 1:3 ~ c(5, 6, 7))
+
+# search documentation gotchas
+?integer
+# for help-only topics, use
+help(Syntax)
+}
+\value{
+\code{x [lgl] ? y [fml, any]}, a vector of length x, of type LHS of y. \cr
+\code{x [any] ? y}, a scalar [lgl]. \cr
+\code{x [any] ?~ y}, vector of length x, of type y.
+\code{?x [any]}, an object of class \emph{help_files_with_topic}.
 }
