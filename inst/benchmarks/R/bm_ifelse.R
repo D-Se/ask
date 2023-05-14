@@ -1,30 +1,29 @@
 vec_data <- \(n, type, recycle = FALSE, ...) {
-  stopifnot(n > 1)
-  box::use(stringi[stri_rand_strings])
-  x <- sample(c(TRUE, FALSE, NA), n, replace = TRUE, prob = c(.4, .4, .2))
   nyz <- if (recycle) 1 else n
-
-  # base::ifelse destroys attributes, impacts fct etc
+  env <- new.env(hash = FALSE, parent = parent.frame())
+  env$x <- dqsample(c(TRUE, FALSE, NA), n, replace = TRUE)
   type |> switch(
     chr = {
-      y <- stri_rand_strings(nyz, ...) #length
-      z <- stri_rand_strings(nyz, ...) #length
+      env$y <- stri_rand_strings(nyz, length = 1, ...) #length
+      env$z <- stri_rand_strings(nyz, length = 1, ...) #length
     },
     num = {
-      y <- rnorm(nyz, ...)
-      z <- rnorm(nyz, ...)
+      env$y <- dqrnorm(nyz, ...)
+      env$z <- dqrnorm(nyz, ...)
     },
     int = {
-      y <- sample.int(nyz, ...)
-      z <- sample.int(nyz, ...)
+      env$y <- dqsample.int(nyz, ...)
+      env$z <- dqsample.int(nyz, ...)
     },
     lgl = {
-      y <- sample(x, nyz, ...)
-      z <- sample(x, nyz, ...)
+      env$y <- dqsample(env[["x"]], nyz, ...)
+      env$z <- dqsample(env[["x"]], nyz, ...)
     },
     stop("Not yet implemented")
   )
-  list(x = x, y = y, z = z, truth = digest(ifelse(x, y, z))) |> list2env()
+  env$truth <- fastdigest(fifelse(env[["x"]], env[["y"]], env[["z"]]))
+  #list(x = x, y = y, z = z, truth = truth) |> list2env()
+  env
 }
 
 # guard against long-running benchmarks.
@@ -36,7 +35,7 @@ define_times <- \(size, robust = 1) {
 }
 
 guard_vec <- \(x, truth) {
-  stopifnot("Results hash != truth hash!" = identical(digest(x), truth))
+  stopifnot("Results hash != truth hash!" = identical(fastdigest(x), truth))
 }
 
 vec_ask <- \(data, times = FALSE, threads = FALSE, batch = FALSE, ...) {
@@ -135,9 +134,40 @@ batch_ifelse <- \(
     data.frame(
       n = n, type = type, recycle = recycle, truth = data$truth,
       threads = if (!threads) 1 else threads,
-      x = digest(data$x), y = digest(data$y), z = digest(data$z)
+      x = fastdigest(data$x), y = fastdigest(data$y), z = fastdigest(data$z)
     )
   )
+}
+
+bench_ifelse <- \(n, type, times = FALSE, threads = FALSE, recycle = FALSE, ...) {
+  data <- vec_data(n, type, ...)
+  data$threads <- if(!threads) 1L else threads
+
+  # check correctness, setup env and set threads
+  vec_ask(data, times, threads, batch = TRUE)
+  vec_dt(data, times, threads, batch = TRUE)
+  vec_kit(data, times, threads, batch = TRUE)
+  vec_base(data, times, threads, batch = TRUE)
+  # recommend throttling "times"
+  #vec_dplyr(data, times, threads, batch = TRUE)
+
+  .b <- substitute(ifelse(x, y, z))
+  .a <- substitute(x ? y ~ z)
+  .d <- substitute(fifelse(x, y, z))
+  .k <- substitute(iif(x, y, z, nThread = threads))
+  #.t <- substitute(case_when(x ~ y, is.na(x) ~ na, TRUE ~ z))
+
+  substitute(
+    benchmark(
+      base = .b,
+      ask = .a,
+      dt = .d,
+      kit = .k,
+      # recommend commenting dplyr out when n is large
+      #dplyr = .t,
+      times = times, envir = data
+    )[,"mean"], list(.b = .b, .a = .a, .d = .d, .k = .k)#, .t = .t)
+  ) |> eval()
 }
 
 combine <- \(...) {
