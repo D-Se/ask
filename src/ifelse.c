@@ -1,3 +1,6 @@
+// `vector_if` is governed by MPL 2 (http://mozilla.org/MPL/2.0/). Modified from
+// data.table, ©Matt Dowle 2023.
+
 #include "ask.h"
 
 static inline bool IsFormula(SEXP x) {
