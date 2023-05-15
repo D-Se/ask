@@ -1,7 +1,8 @@
 `:=` <- expect_identical
 error <- expect_error
+t <- TRUE
+f <- FALSE
 
-#### scalar_if ####
 (TRUE ? 1) := if (TRUE) 1
 (FALSE ? 1) := if (FALSE) 1
 (TRUE ? 1 ~ 0) := if (TRUE) 1 else 0
@@ -23,18 +24,11 @@ error(logical() ? 10, "Length zero")
 error(TRUE?`~`(), "Malformed")
 error(FALSE?`~`(), "Malformed")
 
-#### vector_if ####
-b <- c(TRUE, TRUE, FALSE)
-y <- 7:9
-z <- 1:3
-lb <- rep_len(b, 1001)
-fct <- rep_len(factor(1:3, 1:3), 1001)
-
 # preserve attributes
-(b ? y ~ z) := ifelse(b, y, z)
-(b ? sum(y) ~ sum(z)) := ifelse(b, sum(y), sum(z))
-attributes(lb ? fct ~ rev(fct)) :=
-  list(class = "factor", levels = c("1", "2", "3"))
+fct <- factor(1, 1)
+att <- attributes(fct)
+attributes(TRUE ? fct) := att
+attributes(c(t, t) ? fct ~ fct) := att
 
 x <- c(TRUE, NA, FALSE)
 (x ? 1:3 ~ 7:9) := c(1L, NA_integer_, 9L) # propagate missing
@@ -44,8 +38,8 @@ x <- c(TRUE, NA, FALSE)
 (x ? list(1, 2, 3) ~ list(7, 8, 9)) := list(1, NULL, 9)
 (x ? as.complex(1:3) ~ as.complex(7:9)) := c(1 + 0i, NA_complex_, 9 + 0i)
 
-(function(x) (x ? 1 ~ 2))(TRUE) := 1
-(function(x, y, z) (x ? y ~ z))(FALSE, 1, 2) := 2
+(\(x) (x ? 1 ~ 2))(TRUE) := 1
+(\(x, y, z) (x ? y ~ z))(FALSE, 1, 2) := 2
 
 # scoping
 dfr <- data.frame(y = 1:2)

@@ -21,7 +21,6 @@ SEXPTYPE abb2type(S abb) {
       return (SEXPTYPE) AbbCoerceTable[i].type;
   }
   Rf_errorcall(R_NilValue, "Abbreviation not found"); // x ?~ bla
-  //return (SEXPTYPE) -1;
 }
 
 static inline S is(S x, S fml) {

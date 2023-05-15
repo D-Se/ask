@@ -3,7 +3,7 @@
 
 #include "ask.h"
 
-static inline bool IsFormula(SEXP x) {
+static inline bool IsFormula(S x) {
   return TYPEOF(x) == LANGSXP && Rf_inherits(x, "formula");
 }
 
@@ -14,19 +14,18 @@ static inline S ENV(S fml) {
 static inline S lhs(S fml) {
   if (IsFormula(fml)) {
     switch(Rf_length(fml)) {
-    case 2: return R_NilValue; // F ?~ 1
+    case 2: return R_NilValue; // T ?~ 1
     case 3: return Rf_eval(CADR(fml), ENV(fml)); // T ? x ~ y
     default: err("Malformed `~` in `?`.");
     };
   } else {
-    return fml; // T ? 1, default NULL rhs value from R `?`
+    return fml; // T ? 1, default NULL at R level
   }
 }
 
 static inline S rhs(S fml) {
   if (IsFormula(fml)) {
     switch(Rf_length(fml)) {
-    //case 1: return R_NilValue; // void else
     case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
     case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
     default: err("Malformed `~` in `?`.");
@@ -43,7 +42,7 @@ static inline S scalar_if(S x, S fml) {
   return cond ? lhs(fml) : rhs(fml);
 }
 
-// pseudo-generic loop body macro to make loop_TYPE
+// pseudo-generic loop body
 #define loop_core(name, T, FUN, NA_TYPE)      \
 static inline void loop_##name(               \
   S ans, S a, S b, int64_t lx, bool naa,      \
@@ -139,8 +138,7 @@ static inline S vector_if(S x, S fml) {
       }
     }
   } break;
-  default:
-    err("Unsupported lhs or rhs type.");
+  default: err("Unsupported lhs or rhs type.");
   }
   S names = PROTECT(getAttrib(x, R_NamesSymbol));
   if (!isNull(names)) setAttrib(ans, R_NamesSymbol, names);

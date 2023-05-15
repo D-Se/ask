@@ -14,7 +14,7 @@ units <- expression(list(
   # T, F, TRUE, FALSE, NA
 ))
 
-s <- capture.output(units[[1]]) |> trimws() |> paste0(collapse = " ")
+s <- paste0(trimws(capture.output(units[[1]])), collapse = " ")
 unit_names <- strsplit(substring(s, 6, last = nchar(s) - 1), ", ")[[1]]
 units <- eval(units)
 

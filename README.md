@@ -55,8 +55,3 @@ y <- c(7, 8, 9)
 | `x ?~ ""`  	| -                 	| -                 	|
 
 `ask` supports abbreviated types and comparison
-
-## Performance
-To compare `ask` performance:  
-1. `git clone` this repo,  
-2. Within R, run `make()`.

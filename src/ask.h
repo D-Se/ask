@@ -25,7 +25,7 @@
 int get_threads(const int64_t n, const bool throttle);
 void init_ask_threads(void);
 
-// Ask API
+// API
 S isas(S, S);
 S ifelse(S, S);
 S get_threads_R(void);

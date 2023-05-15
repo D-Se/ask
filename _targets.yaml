@@ -1,3 +1,0 @@
-main:
-  script: inst/benchmarks/benchmark.R
-  store: inst/benchmarks/_targets/
