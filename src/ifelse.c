@@ -1,18 +1,12 @@
-// `vector_if` is governed by MPL 2 (http://mozilla.org/MPL/2.0/). Modified from
-// data.table, ©Matt Dowle 2023.
+// `vector_if` is modified from data.table ©Matt Dowle 2023, governed by MPL 2.
 
 #include "ask.h"
 
-static inline bool IsFormula(S x) {
-  return TYPEOF(x) == LANGSXP && Rf_inherits(x, "formula");
-}
+bool isFormula(S x) {return TYPEOF(x) == LANGSXP && Rf_inherits(x, "formula");}
+S ENV(S fml) {return Rf_getAttrib(fml, Rf_install(".Environment"));}
 
-static inline S ENV(S fml) {
-  return Rf_getAttrib(fml, Rf_install(".Environment"));
-}
-
-static inline S lhs(S fml) {
-  if (IsFormula(fml)) {
+S lhs(S fml) {
+  if (isFormula(fml)) {
     switch(Rf_length(fml)) {
     case 2: return R_NilValue; // T ?~ 1
     case 3: return Rf_eval(CADR(fml), ENV(fml)); // T ? x ~ y
@@ -23,8 +17,8 @@ static inline S lhs(S fml) {
   }
 }
 
-static inline S rhs(S fml) {
-  if (IsFormula(fml)) {
+S rhs(S fml) {
+  if (isFormula(fml)) {
     switch(Rf_length(fml)) {
     case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
     case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
@@ -35,7 +29,7 @@ static inline S rhs(S fml) {
   }
 }
 
-static inline S scalar_if(S x, S fml) {
+S scalar_if(S x, S fml) {
   int cond = NA_LOGICAL;
   cond = LOGICAL(x)[0];
   if (cond == NA_LOGICAL) err("Missing value where T/F needed");
@@ -44,10 +38,10 @@ static inline S scalar_if(S x, S fml) {
 
 // pseudo-generic loop body
 #define loop_core(name, T, FUN, NA_TYPE)      \
-static inline void loop_##name(               \
-  S ans, S a, S b, int64_t lx, bool naa,      \
-  bool nab, int64_t ma, int64_t mb,           \
-  const int*restrict px, bool openmp) {       \
+void loop_##name(                             \
+  S ans, S a, S b, int64_t lx,                \
+  bool naa, bool nab, int64_t ma, int64_t mb, \
+  const int *restrict px, bool openmp) {      \
   T *restrict pans = FUN(ans);                \
   const T *restrict pa = naa ? NULL : FUN(a), \
           *restrict pb = nab ? NULL : FUN(b), \
@@ -79,7 +73,7 @@ loop_core(NUM, double, REAL,    NA_REAL)
 Rcomplex temp() {Rcomplex x = {.r = NA_REAL, .i = NA_REAL}; return x;}
 loop_core(CPL, Rcomplex, COMPLEX, temp())
 
-static inline S vector_if(S x, S fml) {
+S vector_if(S x, S fml) {
   // l - length, p - pointer, t - type, m - mask
   const S a = PROTECT(lhs(fml)),
           b = PROTECT(rhs(fml));
@@ -147,7 +141,7 @@ static inline S vector_if(S x, S fml) {
 }
 
 S ifelse(S x, S fml) {
-  switch(LENGTH(x)) {
+  switch(Rf_xlength(x)) {
   case 0: err("Length zero argument.");
   case 1: return scalar_if(x, fml);
   default: return vector_if(x, fml);

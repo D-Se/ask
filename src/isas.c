@@ -23,10 +23,10 @@ SEXPTYPE abb2type(S abb) {
   Rf_errorcall(R_NilValue, "Abbreviation not found"); // x ?~ bla
 }
 
-static inline S is(S x, S fml) {
+S is(S x, S fml) {
   return Rf_ScalarLogical(TYPEOF(x) == abb2type(fml));
 }
-static inline S as(S x, S fml) {
+S as(S x, S fml) {
   S abb;
   SEXPTYPE t;
   abb = CADR(fml);
