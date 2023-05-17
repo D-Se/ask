@@ -51,4 +51,3 @@ error(c(NA, NA) ? c(1, 2) ~ 1, "Length")
 
 # misc
 (TRUE ? lst[[2]] ~ lst[[3]]) := 2
-

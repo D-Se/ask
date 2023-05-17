@@ -42,8 +42,11 @@ Class checks and coercions support abbreviated type names.\tabular{llll}{
 }
 }
 \examples{
-# type checks and coercion
-5 ? chr
+# type checks
+5 ? num
+5 ?! num
+
+# type coercion
 5 ?~ chr
 5 ?~ ""
 

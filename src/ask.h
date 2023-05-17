@@ -21,6 +21,7 @@
 #define S SEXP
 #define SEXPPTR_RO(x) ((const S *)DATAPTR_RO(x))
 #define err(x) Rf_errorcall(R_NilValue, x)
+#define warn(x) Rf_warningcall(R_NilValue, x)
 
 int get_threads(const int64_t n, const bool throttle);
 void init_ask_threads(void);

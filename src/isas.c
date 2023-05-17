@@ -20,27 +20,33 @@ SEXPTYPE abb2type(S abb) {
     if (!strcmp(s, AbbCoerceTable[i].abb))
       return (SEXPTYPE) AbbCoerceTable[i].type;
   }
-  Rf_errorcall(R_NilValue, "Abbreviation not found"); // x ?~ bla
+  Rf_errorcall(R_NilValue, "Abbreviation not found");       // x ?~ bla
 }
 
-S is(S x, S fml) {
-  return Rf_ScalarLogical(TYPEOF(x) == abb2type(fml));
+S is(S x, S fml, bool negate) {
+  bool res = TYPEOF(x) == abb2type(fml);
+  if(negate) res = !res;
+  return Rf_ScalarLogical(res);
 }
+
 S as(S x, S fml) {
-  S abb;
-  SEXPTYPE t;
-  abb = CADR(fml);
-  t = TYPEOF(abb);
+  S abb = CADR(fml);
+  SEXPTYPE t = TYPEOF(abb);
   switch(t) {
-  case SYMSXP: return Rf_coerceVector(x, abb2type(abb)); // x ?~ int
-  default: return Rf_coerceVector(x, t); // x ?~ ""
+  case SYMSXP: return Rf_coerceVector(x, abb2type(abb));    // x ?~ t
+  default: return Rf_coerceVector(x, t);                    // x ?~ ""
   }
 }
 
 S isas(S x, S fml) {
   switch(TYPEOF(fml)) {
-  case SYMSXP: return is(x, fml);
-  case LANGSXP: return as(x, fml);
+  case SYMSXP: return is(x, fml, false);                    // x ? t
+  case LANGSXP: {
+    S fun = CAR(fml); // ?+, ?-
+    return fun == Rf_install("!") ?
+    is(x, CADR(fml), true) :                                // x ?! t
+    as(x, fml);                                             // x ?~ t
+  }
   default: return Rf_ScalarLogical(0); // NULL ? NULL opens help, always false
   }
 }

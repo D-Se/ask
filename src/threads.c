@@ -13,10 +13,10 @@ int getIntEnv(const char *name, int def) {
   size_t nchar = strlen(val);
   if (nchar == 0) return def;
   char *end;
-  long int ans = strtol(val, &end, 10);
+  long ans = strtol(val, &end, 10);
   while (isspace(*end)) end++;
   if ((size_t)(end - val) != nchar || ans < 1 || ans > INT_MAX) {
-    Rf_warning("Invalid digit.");
+    warn("Invalid CPU use percentage, using default.");
     return def;
   }
   return (int) ans;
@@ -32,7 +32,7 @@ void init_ask_threads(void) {
   } else {
     int perc = getIntEnv("ASK_NUM_PROCS_PERCENT", 50);
     if (perc <= 1 || perc > 100) {
-      Rf_warning("Invalid percentage.");
+      warn("Invalid percentage.");
       perc = 50;
     }
     ans = max(omp_get_num_procs() * perc / 100, 1);
