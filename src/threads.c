@@ -7,7 +7,7 @@
 int ask_threads = -1;
 int ask_throttle = -1;
 
-int getIntEnv(const char *name, int def) {
+int option(const char *name, int def) { // #nocov
   const char *val = getenv(name);
   if (val == NULL) return def;
   size_t nchar = strlen(val);
@@ -26,11 +26,11 @@ int min(int a, int b) { return a < b ? a : b; }
 int max(int a, int b) { return a > b ? a : b; }
 
 void init_ask_threads(void) {
-  int ans = getIntEnv("ASK_NUM_THREADS", INT_MIN);
+  int ans = option("ASK_NUM_THREADS", INT_MIN);
   if (ans >= 1) {
     ans = min(ans, omp_get_num_procs());
   } else {
-    int perc = getIntEnv("ASK_NUM_PROCS_PERCENT", 50);
+    int perc = option("ASK_NUM_PROCS_PERCENT", 50);
     if (perc <= 1 || perc > 100) {
       warn("Invalid percentage.");
       perc = 50;
@@ -39,28 +39,26 @@ void init_ask_threads(void) {
   }
   ans = min(ans, omp_get_thread_limit()); // CRAN sets to 2
   ans = min(ans, omp_get_max_threads());
-  ans = min(ans, getIntEnv("OMP_THREAD_LIMIT", INT_MAX));
-  ans = min(ans, getIntEnv("OMP_NUM_THREADS", INT_MAX));
+  ans = min(ans, option("OMP_THREAD_LIMIT", INT_MAX));
+  ans = min(ans, option("OMP_NUM_THREADS", INT_MAX));
   ask_threads = ans;
-  ask_throttle = max(1, getIntEnv("ASK_THROTTLE", 1024));
+  ask_throttle = max(1, option("ASK_THROTTLE", 1024));
 }
 
-int get_threads(const int64_t n,
-                const bool throttle) {
+int get_threads(const int n, const bool throttle) {
   if (n < 1) return 1;
-  int64_t ans = throttle ? 1 + (n - 1) / ask_throttle : n;
-  return ans >= ask_threads ? ask_threads : (int) ans;
+  int ans = throttle ? 1 + (n - 1) / ask_throttle : n;
+  return ans >= ask_threads ? ask_threads : ans;
 }
 
 S get_threads_R() { return ScalarInteger(get_threads(INT_MAX, false)); }
 
 S set_threads(S threads, S percent, S throttle) {
   if (length(throttle)) {
-    if (!isInteger(throttle) || LENGTH(throttle) != 1 || INTEGER(throttle)[0] < 1)
+    if (length(throttle) != 1 || !isInteger(throttle) || INTEGER(throttle)[0] < 1)
       err("Invalid throttle value.");
     ask_throttle = INTEGER(throttle)[0];
   }
-  int old = ask_threads;
   if (!length(threads) && !length(throttle)) {
     init_ask_threads();
   } else if (length(threads)) {
@@ -70,13 +68,13 @@ S set_threads(S threads, S percent, S throttle) {
     }
     int num_procs = max(omp_get_num_procs(), 1);
     if (LOGICAL(percent)[0]) {
-      if (n < 2 || n > 100) err("Supply threads in [2, 100]"); // # nocov
+      if (n < 2 || n > 100) err("Supply threads in [2, 100]"); // #nocov
       n = num_procs * n / 100;
     } else {
       if (n == 0 || n > num_procs) n = num_procs;
     }
-    n = min(n, getIntEnv("OMP_THREAD_LIMIT", INT_MAX));
+    n = min(n, option("OMP_THREAD_LIMIT", INT_MAX));
     ask_threads = max(n, 1);
   }
-  return ScalarInteger(old);
+  return ScalarInteger(ask_threads);
 }

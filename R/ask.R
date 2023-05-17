@@ -19,8 +19,8 @@ ask <- function(threads = NULL, pct = NULL) {
     if (length(pct) != 1L) stop("Scalar value needed for percent.")
     pct <- as.integer(pct)
     if (is.na(pct) || pct < 2L || pct > 100L) stop("pct in [2, 100] please.")
-    invisible(.Call(c_set_threads, pct, TRUE, integer(0)))
+    .Call(c_set_threads, pct, TRUE, integer(0))
   } else {
-    invisible(.Call(c_set_threads, as.integer(threads), FALSE, integer(0)))
+    .Call(c_set_threads, as.integer(threads), FALSE, integer(0))
   }
 }
