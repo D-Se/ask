@@ -9,6 +9,16 @@
   } else {
     .Call(isas, x, y, PACKAGE = "ask")
   }
+`?` <- function(x, y) {
+  switch(
+    nargs(),
+    do.call(utils::`?`, list(substitute(x))),
+    if(is.logical(x)) {
+      .Call(ifelse, x, y, PACKAGE = "ask")
+    } else {
+      .Call(isas, x, substitute(y), PACKAGE = "ask")
+    }
+  )
 }
 
 ask <- function(threads = NULL, pct = NULL) {
