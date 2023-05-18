@@ -20,7 +20,7 @@ SEXPTYPE abb2type(S abb) {
     if (!strcmp(s, AbbCoerceTable[i].abb))
       return (SEXPTYPE) AbbCoerceTable[i].type;
   }
-  Rf_errorcall(R_NilValue, "Abbreviation not found");       // x ?~ bla
+  err("Abbreviation not found");                           // x ?~ bla
 }
 
 S is(S x, S fml, bool negate) {

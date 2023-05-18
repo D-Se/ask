@@ -8,20 +8,32 @@ S ENV(S fml) {return Rf_getAttrib(fml, Rf_install(".Environment"));}
 S lhs(S fml) {
   if (isFormula(fml)) {
     switch(Rf_length(fml)) {
-    case 2: return R_NilValue; // T ?~ 1
-    case 3: return Rf_eval(CADR(fml), ENV(fml)); // T ? x ~ y
+    case 2: return R_NilValue;                                    // T ?~ 1
+    case 3: return Rf_eval(CADR(fml), ENV(fml));                  // T ? x ~ y
     default: err("Malformed `~` in `?`.");
     };
   } else {
-    return fml; // T ? 1, default NULL at R level
+    return fml; // default NULL at R level                           T ? x
   }
+}
+
+const char * str2char(S s) {
+  return CHAR(STRING_ELT(Rf_coerceVector(s, STRSXP), 0));
 }
 
 S rhs(S fml) {
   if (isFormula(fml)) {
     switch(Rf_length(fml)) {
-    case 2: return Rf_eval(CADR(fml), ENV(fml)); // ~x
-    case 3: return Rf_eval(CADDR(fml), ENV(fml)); // x ~ y
+    case 2: {
+    SEXP expr = CADR(fml);
+    if(TYPEOF(expr) == LANGSXP && CAR(expr) == Rf_install("!")) {  // x ?~! y
+      SEXP msg = CADR(expr);
+      err(str2char(TYPEOF(msg) == STRSXP ? msg : Rf_eval(msg, ENV(fml))));
+    } else {
+      return Rf_eval(CADR(fml), ENV(fml));                         // ~x
+    }
+    }
+    case 3: return Rf_eval(CADDR(fml), ENV(fml));                  // x ~ y
     default: err("Malformed `~` in `?`.");
     };
   } else {
