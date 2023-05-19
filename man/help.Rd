@@ -20,7 +20,9 @@ S4 method docs. Otherwise, regular help semantics apply.
 \item \strong{Control flow}, \code{x ? yes ~ no, x ? yes, x ?~ no} \cr
 Run scalar-if or \link[base]{ifelse} where appropriate.
 Base R recycling is kept, however, attributes are preserved. Numeric inputs
-are not interpretable as logics, and strict type checking is applied.
+are not interchangable with logicals, and strict type checking is applied.
+\item \strong{Guard clauses}, \code{x ?~! no} \cr
+A simplified \link[base]{stopifnot} where an error occurs if the happy path fails.
 \item \strong{Type check}, \code{x ? type} \cr
 For non-logical \code{x}, short \link[methods]{is} asks if LHS is of type RHS.
 \item \strong{Type coercion}, \code{x ?~ type, x ?~ abb} \cr
@@ -73,12 +75,14 @@ try(x ? 1:3 ~ c(5, 6, 7))
 
 # search documentation gotchas
 ?integer
-# for help-only topics, use
-help(Syntax)
+
+# guard clauses
+try(1 == 0 ?~! "message")
 }
 \value{
-\code{x [lgl] ? y [fml, any]}, a vector of length x, of type LHS of y. \cr
-\code{x [any] ? y}, a scalar [lgl]. \cr
-\code{x [any] ?~ y}, vector of length x, of type y.
+\code{x [lgl] ?   y [fml, any]}, a vector of length x, of type LHS of y. \cr
+\code{x [lgl] ?~! y [chr], an error with message y} \cr
+\code{x [any] ?   y}, a scalar [lgl]. \cr
+\code{x [any] ?~  y}, vector of length x, of type y.
 \code{?x [any]}, an object of class \emph{help_files_with_topic}.
 }
