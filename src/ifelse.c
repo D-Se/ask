@@ -30,7 +30,7 @@ S rhs(S fml) {
       SEXP msg = CADR(expr);
       err(str2char(TYPEOF(msg) == STRSXP ? msg : Rf_eval(msg, ENV(fml))));
     } else {
-      return Rf_eval(CADR(fml), ENV(fml));                         // ~x
+      return Rf_eval(expr, ENV(fml));                              // ~x
     }
     }
     case 3: return Rf_eval(CADDR(fml), ENV(fml));                  // x ~ y
