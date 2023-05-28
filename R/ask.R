@@ -1,6 +1,8 @@
 .onLoad   <- function(libname, pkgname) options("ask.thread" = 1L) #nocov
 .onUnload <- function(libpath) library.dynam.unload("ask", libpath) #nocov
 
+globalVariables(c("int", "nil"))
+
 `?` <- function(x, y) {
   switch(
     nargs(),

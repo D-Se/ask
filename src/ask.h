@@ -18,13 +18,19 @@
 
 #include <Rinternals.h>
 
+// redefines
 #define S SEXP
 #define SEXPPTR_RO(x) ((const S *)DATAPTR_RO(x))
 #define err(x) Rf_errorcall(R_NilValue, x)
 #define warn(x) Rf_warningcall(R_NilValue, x)
 
+#include <Rinternals.h>
+//#include "abb.h"
+
+// internals
 int get_threads(const int n, const bool throttle);
 void init_ask_threads(void);
+bool isFormula(S);
 
 // API
 S isas(S, S);
