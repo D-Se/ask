@@ -41,55 +41,66 @@ ABB str2abb(S abb) {
 }
 
 S is(S x, S fml, bool negate) {
-  bool res = false;
+  bool ans = false;
   switch(str2abb(fml)) {
   // atomic
-  case NILABB: res = isNull(x); break;
-  case INTABB: res = isInteger(x); break;
-  case LGLABB: res = isLogical(x); break;
-  case DBLABB: res = isReal(x); break;
+  case NILABB: ans = isNull(x); break;
+  case INTABB: ans = isInteger(x); break;
+  case LGLABB: ans = isLogical(x); break;
+  case DBLABB: ans = isReal(x); break;
   case CHRABB:
-  case STRABB: res = isString(x); break;
-  case CPLABB: res = isComplex(x); break;
-  case RAWABB: res = TYPEOF(x) == RAWSXP; break;
+  case STRABB: ans = isString(x); break;
+  case CPLABB: ans = isComplex(x); break;
+  case RAWABB: ans = TYPEOF(x) == RAWSXP; break;
   // bunch
   case LSTABB: {
-    res = TYPEOF(x) == LISTSXP || (LENGTH(x) == 0 && TYPEOF(x) == VECSXP);
+    ans = TYPEOF(x) == LISTSXP || (LENGTH(x) == 0 && TYPEOF(x) == VECSXP);
   }; break; // isList includes NULL, breaks on empty list()
   case DFABB :
-  case DFRABB: res = isFrame(x); break;
-  case ENVABB: res = isEnvironment(x); break;
-  case VECABB: res = isVector(x); break;
-  case MTXABB: res = isMatrix(x); break;
-  case ARRABB: res = isArray(x); break;
-  case TSABB: res = isTs(x); break;
-  case FCTABB: res = isFactor(x); break;
-  case ORDABB: res = isOrdered(x); break;
-  case TABABB: res = Rf_inherits(x, "table"); break;
-  case NUMABB: res = isNumber(x); break; // isNumeric excludes CPLSXP
+  case DFRABB: ans = isFrame(x); break;
+  case ENVABB: ans = isEnvironment(x); break;
+  case VECABB: ans = isVector(x); break;
+  case MTXABB: ans = isMatrix(x); break;
+  case ARRABB: ans = isArray(x); break;
+  case TSABB: ans = isTs(x); break;
+  case FCTABB: ans = isFactor(x); break;
+  case ORDABB: ans = isOrdered(x); break;
+  case TABABB: ans = Rf_inherits(x, "table"); break;
+  case NUMABB: ans = isNumber(x); break; // isNumeric excludes CPLSXP
   // language & programming
-  case SYMABB: res = isSymbol(x); break;
-  case LNGABB: res = isLanguage(x); break; // only LANGSXP
+  case SYMABB: ans = isSymbol(x); break;
+  case LNGABB: ans = isLanguage(x); break; // only LANGSXP
   //case CLOABB: res = ??
-  case FUNABB: res = isFunction(x); break;
-  case EXPABB: res = isExpression(x); break;
-  case FMLABB: res = isFormula(x); break;
-  // value & states
-  //case NAABB: res = R_IsNA(x); break;
-  //case NANABB: res = ISNAN(REAL(x)[0]); break;
-  //case FINABB: res = isfinite(REAL(x)[0]); break;
+  case FUNABB: ans = isFunction(x); break;
+  case EXPABB: ans = isExpression(x); break;
+  case FMLABB: ans = isFormula(x); break;
+  // OOP
   //case S3ABB: res = IS_S4_OBJECT(x) != 0; break;
-  case S4ABB: res = isS4(x); break;
+  case S4ABB: ans = isS4(x); break;
   //case ATMABB: res = isAtomic(x); break;
   // third-party
   // case TBLABB: Rf_inherits(x, "tbl"); break;
+  //case NAABB:
+  //case NANABB: return vec_is(x, fml);
   case ANYABB:
-  default: res = TYPEOF(x) == str2sexp(fml);
+  default: ans = TYPEOF(x) == str2sexp(fml);
   };
-  if(negate) res = !res;
-
-  return Rf_ScalarLogical(res);
+  if(negate) ans = !ans;
+  return Rf_ScalarLogical(ans);
 }
+
+// S is_vec(S x, S fml, bool negate) {
+//   int n = xlength(x);
+//   PROTECT(S ans = allocVector(LGLSXP, n));
+//   int *pa = LOGICAL(ans);
+//   switch(str2abb(fml)) {
+//   // value & states
+//   //case NAABB: res = R_IsNA(x); break;
+//   case NANABB: res = TYPEOF(x) == REALSXP && ISNAN(REAL(x)[0]); break;
+//   };
+//   UNPROTECT(1);
+//   return ans;
+// }
 
 S isas(S x, S fml) {
   switch(TYPEOF(fml)) {

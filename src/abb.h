@@ -9,9 +9,10 @@ X(TSABB, "ts")      X(FCTABB, "fct")    X(ORDABB, "ord")    X(TABABB, "tab")  \
 /* language & programming */                                      \
 X(SYMABB, "sym")    X(LNGABB, "lng")    X(CLOABB, "clo")          \
 X(FUNABB, "fun")    X(EXPABB, "exp")    X(FMLABB, "fml")          \
-/* values & states */                                             \
-X(NAABB, "na")      X(NANABB, "nan")    X(FINABB, "fin")    X(INFABB, "inf")  \
-X(NUMABB, "num")                              \
+/* supertypes */                                                  \
+X(NUMABB, "num")                                                  \
+/* states & values */                                             \
+X(INFABB, "inf")    X(FINABB, "fin")                              \
 /* object oriented */                                             \
 X(S3ABB, "s3")      X(S4ABB, "s4")      X(ANYABB, "any")    X(ATMABB, "atm")  \
 /* third-party */                                                 \
