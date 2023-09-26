@@ -10,7 +10,9 @@ units <- expression(list(
   "", NA_character_,
   NULL,
   1^1i, NA_complex_, 0^1i, # complex NaN
-  list()
+  list()#,
+  #data.frame(x = 1),
+  #raw(1)
   # T, F, TRUE, FALSE, NA
 ))
 

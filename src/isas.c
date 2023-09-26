@@ -44,39 +44,39 @@ S is(S x, S fml, bool negate) {
   bool ans = false;
   switch(str2abb(fml)) {
   // atomic
-  case NILABB: ans = isNull(x); break;
-  case INTABB: ans = isInteger(x); break;
-  case LGLABB: ans = isLogical(x); break;
-  case DBLABB: ans = isReal(x); break;
+  case NILABB: ans = isNull(x);                 break;
+  case INTABB: ans = isInteger(x);              break;
+  case LGLABB: ans = isLogical(x);              break;
+  case DBLABB: ans = isReal(x);                 break;
   case CHRABB:
-  case STRABB: ans = isString(x); break;
-  case CPLABB: ans = isComplex(x); break;
-  case RAWABB: ans = TYPEOF(x) == RAWSXP; break;
+  case STRABB: ans = isString(x);               break;
+  case CPLABB: ans = isComplex(x);              break;
+  case RAWABB: ans = TYPEOF(x) == RAWSXP;       break;
   // bunch
   case LSTABB: {
-    ans = TYPEOF(x) == LISTSXP || (LENGTH(x) == 0 && TYPEOF(x) == VECSXP);
-  }; break; // isList includes NULL, breaks on empty list()
+    ans = (TYPEOF(x) == VECSXP || TYPEOF(x) == LISTSXP);
+    // isList includes NULL, breaks on empty list()
+    // ans = TYPEOF(x) == LISTSXP || (LENGTH(x) == 0 && TYPEOF(x) == VECSXP);
+  };                                          break;
   case DFABB :
-  case DFRABB: ans = isFrame(x); break;
-  case ENVABB: ans = isEnvironment(x); break;
-  case VECABB: ans = isVector(x); break;
-  case MTXABB: ans = isMatrix(x); break;
-  case ARRABB: ans = isArray(x); break;
-  case TSABB: ans = isTs(x); break;
-  case FCTABB: ans = isFactor(x); break;
-  case ORDABB: ans = isOrdered(x); break;
-  case TABABB: ans = Rf_inherits(x, "table"); break;
-  case NUMABB: ans = isNumber(x); break; // isNumeric excludes CPLSXP
-  // language & programming
-  case SYMABB: ans = isSymbol(x); break;
-  case LNGABB: ans = isLanguage(x); break; // only LANGSXP
+  case DFRABB: ans = isFrame(x);                break;
+  case ENVABB: ans = isEnvironment(x);          break;
+  case VECABB: ans = isVector(x);               break;
+  case MTXABB: ans = isMatrix(x);               break;
+  case ARRABB: ans = isArray(x);                break;
+  case TSABB: ans = isTs(x);                    break;
+  case FCTABB: ans = isFactor(x);               break;
+  case ORDABB: ans = isOrdered(x);              break;
+  case TABABB: ans = Rf_inherits(x, "table");   break;
+  case NUMABB: ans = isNumber(x);               break; // isNumeric omits CPLSXP
+  case SYMABB: ans = isSymbol(x);               break;
+  case LNGABB: ans = isLanguage(x);             break; // only LANGSXP
   //case CLOABB: res = ??
-  case FUNABB: ans = isFunction(x); break;
-  case EXPABB: ans = isExpression(x); break;
-  case FMLABB: ans = isFormula(x); break;
-  // OOP
+  case FUNABB: ans = isFunction(x);             break;
+  case EXPABB: ans = isExpression(x);           break;
+  case FMLABB: ans = isFormula(x);              break;
   //case S3ABB: res = IS_S4_OBJECT(x) != 0; break;
-  case S4ABB: ans = isS4(x); break;
+  case S4ABB: ans = isS4(x);                    break;
   //case ATMABB: res = isAtomic(x); break;
   // third-party
   // case TBLABB: Rf_inherits(x, "tbl"); break;
