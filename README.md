@@ -1,6 +1,5 @@
-# `ask`
-Syntax for convenient control flow and type checks/coercion for fast thought-to-code. Fewer syntax errors, less debugging, faster data science.
-
+# `ask` ? yes ~ no
+Nice control flow and type checks/coercion syntax for fast thought-to-code. Fewer syntax errors, less debugging, faster data science. Favors terse syntax over common actions over S4 method documentation.
 <!-- badges: start -->
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![](https://codecov.io/gh/D-Se/ask/branch/main/graph/badge.svg)](https://app.codecov.io/gh/D-Se/ask?branch=main)
@@ -16,42 +15,42 @@ remotes::install_github("D-Se/ask")
 
 ## Usage
 
-### Scalar-if
+```r
+# ternary vectorized query operator with elevated precedence
+z <- TRUE ? 1 ~ 2
+
+x <- c(TRUE, FALSE, NA)
+a <- 1:3; b <- 4:6; c <- 7:9
+x ? a ~ {!x ? b ~ c}
+x ? a ~ (!x ? b ~ c)
+
+# check types using 3-letter abbreviations
+5 ? num
+5 ?! num
+
+# coerce types
+5 ?~ chr
+5 ?~ ""
+
+# scalar-if
+TRUE ? 1 ~ 2
+TRUE ? 1
+FALSE ? 2
+FALSE ?~ 2
+
+# happy path guard clauses
+TRUE ?~! "message"
+FALSE ?~! "message"
+
+# search documentation like usual, except S4 methods
+?integer
+??regression
 ```
-e = logical(0)
+
+## Gotchas
+
+```r
+# all queries must be of the same type
+x ? a ~ c(5, 6, 7)     # integer is not the same as numeric
+x ? a ~ !x ? b ~ c     # missing braces, precedence issue
 ```
-| ask                	| base                    	| tidy                         	| fast                        	|
-|--------------------	|-------------------------	|------------------------------	|------------------------------	|
-| `T ? 1`            	| `if(T) 1`               	| -                            	| -                            	|
-| `T ? 1 ~ 2`        	| `if(T) 1 else 2`        	| `if_else(T, 1, 2)`           	| `fifelse(T, 1, 2)`           	|
-| `NA ? 1 ~ 2` [err] 	| `if(NA) 1 else 2`[err]  	| `if_else(NA, 1, 2)` [num NA] 	| `fifelse(NA, 1, 2)` [num NA] 	|
-| `e ? 1 ~ 2` [err]  	| `if(e) 1 else 2` [err]  	| `if_else(e, 1, 2)` [num e]   	| `fifelse(e, 1, 2)` [num e]   	|
-
-### Vector-if
-```
-t <- c(T, F, NA)
-x <- 1:3
-y <- c(7, 8, 9)
-```
-| ask               	| base              	| tidy              	| fast              	|
-|-------------------	|-------------------	|--------------------	|--------------------	|
-| `t ? 1 ~ 2`       	| `ifelse(t, 1, 2)` 	| `if_else(t, 1, 2)` 	| `fifelse(t, 1, 2)` 	|
-| `t ? x ~ y` [err] 	| `ifelse(t, x, y)` 	| `if_else(t, x, y)` 	| `fifelse(t, x, y)` 	|
-
-`ask` does not do silent promotion.
-
-### Type queries
-
-| ask       	| base              	| tidy              	|
-|-----------	|-------------------	|-------------------	|
-| `x ? chr` 	| `is.character(x)` 	| `is_character(x)` 	|
-| `x ? ""`  	| -                 	| -                 	|
-
-### Type coercion
-
-| ask        	| base              	| tidy              	|
-|------------	|-------------------	|-------------------	|
-| `x ?~ chr` 	| `as.character(x)` 	| `as_character(x)` 	|
-| `x ?~ ""`  	| -                 	| -                 	|
-
-`ask` supports abbreviated types and comparison

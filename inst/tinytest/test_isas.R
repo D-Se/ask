@@ -20,11 +20,11 @@ units <- eval(units)
 
 #### type checking ####
 base_is <- vapply(paste0("is.", names), \(fun) {
-  vapply(units, \(x) do.call(fun, list(x = x)), TRUE)
+  vapply(units, function(x) do.call(fun, list(x = x)), TRUE)
 }, logical(length(units)))
 
-ask_is <- vapply(abbs, \(y) {
-  vapply(units, \(x) {
+ask_is <- vapply(abbs, function(y) {
+  vapply(units, function(x) {
     eval(substitute(x ? y, list(x = x, y = as.name(y))))
   }, TRUE)
 }, logical(length(units)))

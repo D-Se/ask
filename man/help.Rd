@@ -1,6 +1,6 @@
 \name{?}
 \alias{?}
-\title{?: conditions, types and documentation shortcuts}
+\title{?: control flow, types and documentation shortcuts}
 \description{
 Ask objects about types, control flow and documentation.
 }
@@ -24,14 +24,16 @@ are not interchangable with logicals, and strict type checking is applied.
 \item \strong{Guard clauses}, \code{x ?~! no} \cr
 A simplified \link[base]{stopifnot} where an error occurs if the happy path fails.
 \item \strong{Type check}, \code{x ? type} \cr
-For non-logical \code{x}, short \link[methods]{is} asks if LHS is of type RHS.
+For non-logical \code{x}, short \link[methods]{is}; ask if LHS is of type RHS.
 \item \strong{Type coercion}, \code{x ?~ type, x ?~ abb} \cr
-For non-logical \code{x}, short \link[methods]{as} coerces LHS to type RHS.
+For non-logical \code{x}, short \link[methods]{as}; coerce LHS to type RHS.
 }
 }
 \section{Abbreviations}{
 
-Class checks and coercions support abbreviated type names.\tabular{llll}{
+Abbreviated type names. Note: more complex types are yet to be implemented.
+
+\tabular{llll}{
    \strong{Atomic} \tab \strong{Bunch} \tab \strong{Language} \tab \strong{Other} \cr
    atm \tab rec \tab lang \tab na \cr
    lgl \tab lst \tab sym \tab nan \cr
@@ -53,17 +55,18 @@ Class checks and coercions support abbreviated type names.\tabular{llll}{
 5 ?~ ""
 
 # scalar-if
-TRUE ? 1 ~ 2
-TRUE ? 1
-FALSE ? 2
-FALSE ?~ 2
+y <- TRUE; n <- FALSE
+y ? 1 ~ 2
+y ? 1
+n ? 2
+n ?~ 2
 
 # ternary / vector-if, recycled and by position, and elevated precedence
-res <- c(TRUE, FALSE) ? 1 ~ 2; res
-c(TRUE, FALSE) ? c(3, 4) ~ c(5, 6)
+res <- c(y, n) ? 1 ~ 2; res
+c(y, n) ? c(3, 4) ~ c(5, 6)
 
 # nested, top-down evaluation
-x <- c(TRUE, FALSE, NA)
+x <- c(y, n, NA)
 a <- 1:3; b <- 4:6; c <- 7:9
 x ? a ~ {!x ? b ~ c}
 x ? a ~ (!x ? b ~ c)
@@ -72,7 +75,7 @@ x ? a ~ (!x ? b ~ c)
 try(x ? 1:3 ~ c(5, 6, 7))     # integer is not the same as numeric
 try(x ? 1:3 ~ !x ? 4:6 ~ 7:9) # missing braces
 
-# search documentation gotchas
+# search documentation as usual, except S4 methods
 ?integer
 
 # guard clauses

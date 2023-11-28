@@ -8,7 +8,7 @@ utils::globalVariables("nil")
     do.call(utils::`?`, list(substitute(x))),
     {
       e <- substitute(x)
-      if (is.call(e)) { # handle ? low precedence, loss of ~40% performance 
+      if (is.call(e)) { # handle ? low precedence, loss of ~40% performance
         switch(
           as.character(e[[1]]),
           "=" =, # handle nesting x <- y <- TRUE ? 10 ~ 5
@@ -30,6 +30,7 @@ utils::globalVariables("nil")
   )
 }
 
+# bare-bones, no precedence elevation
 # `?` <- function(x, y) {
 #  switch(
 #    nargs(),
