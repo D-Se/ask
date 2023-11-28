@@ -58,20 +58,19 @@ TRUE ? 1
 FALSE ? 2
 FALSE ?~ 2
 
-# vector-if, recycled and by position
-c(TRUE, FALSE) ? 1 ~ 2
+# ternary / vector-if, recycled and by position, and elevated precedence
+res <- c(TRUE, FALSE) ? 1 ~ 2; res
 c(TRUE, FALSE) ? c(3, 4) ~ c(5, 6)
 
 # nested, top-down evaluation
-x = c(TRUE, FALSE, NA)
-a = 1:3; b = 4:6; c = 7:9
-x ? a ~ {
-  !x ? b ~ c
-}
+x <- c(TRUE, FALSE, NA)
+a <- 1:3; b <- 4:6; c <- 7:9
+x ? a ~ {!x ? b ~ c}
+x ? a ~ (!x ? b ~ c)
 
-# all queries must be of the same length and type
-try(x ? a ~ {!x ? b ~ NA_integer_})
-try(x ? 1:3 ~ c(5, 6, 7))
+# all queries must be of the same type
+try(x ? 1:3 ~ c(5, 6, 7))     # integer is not the same as numeric
+try(x ? 1:3 ~ !x ? 4:6 ~ 7:9) # missing braces
 
 # search documentation gotchas
 ?integer
@@ -81,7 +80,7 @@ try(1 == 0 ?~! "message")
 }
 \value{
 \code{x [lgl] ?   y [fml, any]}, a vector of length x, of type LHS of y. \cr
-\code{x [lgl] ?~! y [chr], an error with message y} \cr
+\code{x [lgl] ?~! y [chr]}, an error with message y. \cr
 \code{x [any] ?   y}, a scalar [lgl]. \cr
 \code{x [any] ?~  y}, vector of length x, of type y.
 \code{?x [any]}, an object of class \emph{help_files_with_topic}.

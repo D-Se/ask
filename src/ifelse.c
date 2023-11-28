@@ -98,8 +98,8 @@ S vector_if(S x, S fml) {
                  tb = TYPEOF(b);
 
   // omit length check to support nested (case_when) behavior.
-  if (la != lb) err("Mismatch lhs and rhs: Length.");
-  if (ta != tb) err("Mismatch lhs and rhs: Type.");
+  //if (la != lb) err("Mismatch lhs and rhs: Length.");
+  if (ta != tb) err("Type mismatch lhs and rhs."); 
 
   const bool naa = la == 1 && ta == LGLSXP && LOGICAL(a)[0] == NA_LOGICAL,
              nab = lb == 1 && tb == LGLSXP && LOGICAL(b)[0] == NA_LOGICAL,

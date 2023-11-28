@@ -39,15 +39,18 @@ x <- c(TRUE, NA, FALSE)
 (x ? list(1, 2, 3) ~ list(7, 8, 9)) := list(1, NULL, 9)
 (x ? as.complex(1:3) ~ as.complex(7:9)) := c(1 + 0i, NA_complex_, 9 + 0i)
 
-(\(x) (x ? 1 ~ 2))(TRUE) := 1
-(\(x, y, z) (x ? y ~ z))(FALSE, 1, 2) := 2
+(function(x) (x ? 1 ~ 2))(TRUE) := 1
+(function(x, y, z) (x ? y ~ z))(FALSE, 1, 2) := 2
 
 # scoping
 transform(dfr, z = y < 3 ? 5 ~ 1) := transform(dfr, z = ifelse(y < 3, 5, 1))
 
 error(c(NA, NA) ? `~`() ~ `~`(), "Unsupported")
 error(c(NA, NA) ? 1 ~ "a", "Type")
-error(c(NA, NA) ? c(1, 2) ~ 1, "Length")
+# if length mismatch is disallowed:
+#error(c(NA, NA) ? c(1, 2) ~ 1, "Length")
 
 # misc
 (TRUE ? lst[[2]] ~ lst[[3]]) := 2
+num = "hi"
+(num ? num) := FALSE
