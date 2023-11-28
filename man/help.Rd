@@ -31,13 +31,13 @@ For non-logical \code{x}, short \link[methods]{as}; coerce LHS to type RHS.
 }
 \section{Abbreviations}{
 
-Abbreviated type names. Note: more complex types are yet to be implemented.
+Abbreviated type names. Note: coercion to complex types is not yet implemented.
 
 \tabular{llll}{
    \strong{Atomic} \tab \strong{Bunch} \tab \strong{Language} \tab \strong{Other} \cr
-   atm \tab rec \tab lang \tab na \cr
+   atm \tab rec \tab lng \tab na \cr
    lgl \tab lst \tab sym \tab nan \cr
-   int \tab dfr \tab expr \tab nil \cr
+   int \tab dfr \tab exp \tab nil \cr
    num \tab vec \tab call \tab fin \cr
    chr \tab mtx \tab name \tab inf \cr
    raw \tab arr \tab fun \tab ord \cr

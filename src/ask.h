@@ -23,8 +23,10 @@
 #define err(x) Rf_errorcall(R_NilValue, x)
 #define warn(x) Rf_warningcall(R_NilValue, x)
 
+// internals
 int get_threads(const int n, const bool throttle);
 void init_ask_threads(void);
+bool isFormula(S);
 
 // API
 S isas(S, S);
