@@ -1,4 +1,4 @@
-# `ask` ? yes ~ no
+# `ask` ? yes ~ no <img src="man/figures/logo.png" align="right" height="139" alt="" />
 Nice control flow and type checks/coercion syntax for fast thought-to-code. Fewer syntax errors, less debugging, faster data science. Favors terse syntax over common actions over S4 method documentation.
 <!-- badges: start -->
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
