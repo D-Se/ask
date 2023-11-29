@@ -1,48 +1,20 @@
 // this file is modified from data.table, ©Matt Dowle 2023, governed by MPL 2.
 
-// openmp
-#include <ctype.h> // isspace
 #include "ask.h"
 
-int ask_threads = -1;
-int ask_throttle = -1;
-
-int option(const char *name, int def) { // #nocov
-  const char *val = getenv(name);
-  if (val == NULL) return def;
-  size_t nchar = strlen(val);
-  if (nchar == 0) return def;
-  char *end;
-  long ans = strtol(val, &end, 10);
-  while (isspace(*end)) end++;
-  if ((size_t)(end - val) != nchar || ans < 1 || ans > INT_MAX) {
-    warn("Invalid CPU use percentage, using default.");
-    return def;
-  }
-  return (int) ans;
-}
+static int ask_threads = -1;
+static int ask_throttle = -1;
 
 int min(int a, int b) { return a < b ? a : b; }
 int max(int a, int b) { return a > b ? a : b; }
 
 void init_ask_threads(void) {
-  int ans = option("ASK_NUM_THREADS", INT_MIN);
-  if (ans >= 1) {
-    ans = min(ans, omp_get_num_procs());
-  } else {
-    int perc = option("ASK_NUM_PROCS_PERCENT", 50);
-    if (perc <= 1 || perc > 100) {
-      warn("Invalid percentage.");
-      perc = 50;
-    }
-    ans = max(omp_get_num_procs() * perc / 100, 1);
-  }
+  int ans = max(omp_get_num_procs() * 50 / 100, 1);
   ans = min(ans, omp_get_thread_limit()); // CRAN sets to 2
   ans = min(ans, omp_get_max_threads());
-  ans = min(ans, option("OMP_THREAD_LIMIT", INT_MAX));
-  ans = min(ans, option("OMP_NUM_THREADS", INT_MAX));
+  ans = min(ans, INT_MAX);
   ask_threads = ans;
-  ask_throttle = max(1, option("ASK_THROTTLE", 1024));
+  ask_throttle = 1024;
 }
 
 int get_threads(const int n, const bool throttle) {
@@ -53,13 +25,8 @@ int get_threads(const int n, const bool throttle) {
 
 S get_threads_R() { return ScalarInteger(get_threads(INT_MAX, false)); }
 
-S set_threads(S threads, S percent, S throttle) {
-  if (length(throttle)) {
-    if (length(throttle) != 1 || !isInteger(throttle) || INTEGER(throttle)[0] < 1)
-      err("Invalid throttle value.");
-    ask_throttle = INTEGER(throttle)[0];
-  }
-  if (!length(threads) && !length(throttle)) {
+S set_threads(S threads, S percent) {
+  if (!length(threads)){
     init_ask_threads();
   } else if (length(threads)) {
     int n = 0;
@@ -73,7 +40,7 @@ S set_threads(S threads, S percent, S throttle) {
     } else {
       if (n == 0 || n > num_procs) n = num_procs;
     }
-    n = min(n, option("OMP_THREAD_LIMIT", INT_MAX));
+    n = min(n, INT_MAX);
     ask_threads = max(n, 1);
   }
   return ScalarInteger(ask_threads);

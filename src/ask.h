@@ -32,6 +32,6 @@ bool isFormula(S);
 S isas(S, S);
 S ifelse(S, S);
 S get_threads_R(void);
-S set_threads(S, S, S);
+S set_threads(S, S);
 
 #endif
