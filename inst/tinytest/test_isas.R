@@ -39,6 +39,26 @@ for (i in seq_len(nrow(ask_is))) {
   }
 }
 
+error(1 ? huh, "Abbreviation")
+vals = list(
+  1, 1+0i, raw(1), ts(1), factor(1), ordered(1), table(1),
+  mtcars, mtcars, new.env(), c(1, 2), matrix(1), array(1:3, 4:6),
+  lapply, expression(1+1), getClass("MethodDefinition")
+)
+abbs2 = c(
+  "dbl", "cpl", "raw", "ts", "fct", "ord", "tab",
+  "df", "dfr", "env", "vec", "mtx", "arr",
+  "fun", "exp", "s4"
+)
+for (i in seq_along(vals)) {
+  eval(substitute(x ? y, list(x = vals[[i]], y = as.name(abbs2[i])))) := TRUE
+}
+
+# misc type check
+(as.name("x") ? sym) := TRUE
+(call("f") ? lng) := TRUE
+(x ~ y ? fml) := TRUE
+
 #### Type coercion ####
 as_names <- paste0("as.", names)
 base_as <- vapply(paste0("as.", names), function(fun) {

@@ -54,3 +54,5 @@ error(c(NA, NA) ? 1 ~ "a", "Type")
 (TRUE ? lst[[2]] ~ lst[[3]]) := 2
 num = "hi"
 (num ? num) := FALSE
+
+# new types

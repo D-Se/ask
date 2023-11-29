@@ -36,7 +36,7 @@ ABB str2abb(S abb) {
     if (!strcmp(s, AbbCheckTable[i].str))
       return (ABB) AbbCheckTable[i].abb;
   }
-  err("Abbreviation not found");                           // x ?~ bla
+  err("Abbreviation not found");                           // x ? bla
 }
 S is(S x, S fml, bool negate) {
   bool ans = false;
@@ -77,8 +77,8 @@ S is(S x, S fml, bool negate) {
   //case ATMABB: ans = isAtomic(x); break;
   // third-party
   // case TBLABB: Rf_inherits(x, "tbl"); break;
-  case ANYABB:
-  default: ans = TYPEOF(x) == str2sexp(fml);
+  // case ANYABB: for completeness, but only in C API
+  default: ans = TYPEOF(x) == str2sexp(fml); // #nocov should never be reached
   };
   if(negate) ans = !ans;
   return Rf_ScalarLogical(ans);

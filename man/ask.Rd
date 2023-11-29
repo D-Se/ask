@@ -2,7 +2,7 @@
 \alias{ask}
 \title{Control \code{ask} package behavior in a session.}
 \description{
-OpenMP parallelisation powers vectorised-if. By default 50\% of available cores
+OpenMP parallelisation powers ternary `?`. By default 50\% of available cores
 are used, with as many threads.
 }
 \usage{
