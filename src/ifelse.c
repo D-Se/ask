@@ -28,7 +28,10 @@ S rhs(S fml) {
     SEXP expr = CADR(fml);
     if(TYPEOF(expr) == LANGSXP && CAR(expr) == Rf_install("!")) {  // x ?~! y
       SEXP msg = CADR(expr);
-      err(str2char(TYPEOF(msg) == STRSXP ? msg : Rf_eval(msg, ENV(fml))));
+      if (TYPEOF(msg) != STRSXP) {
+        msg = Rf_eval(msg, ENV(fml));
+      }
+      Rf_errorcall(R_NilValue, "%s", str2char(msg)); // ensure string literal
     } else {
       return Rf_eval(expr, ENV(fml));                              // ~x
     }
