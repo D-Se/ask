@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdlib.h>
 
 #ifdef _OPENMP
   #include <omp.h> // -fopenmp by Makevars files
@@ -19,9 +18,7 @@
 #include <Rinternals.h>
 
 #define S SEXP
-#define SEXPPTR_RO(x) ((const S *)DATAPTR_RO(x))
 #define err(x) Rf_errorcall(R_NilValue, x)
-//#define warn(x) Rf_warningcall(R_NilValue, x)
 
 // internals
 int get_threads(const int n, const bool throttle);

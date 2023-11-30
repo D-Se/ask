@@ -62,5 +62,5 @@ num <- num ? num
 num := FALSE
 num <- +num ?~ lgl
 num := FALSE
-num <- (!num ?~! "nope") # TODO: remove braces
+num <- (!num ?~! "nope")
 num := NULL

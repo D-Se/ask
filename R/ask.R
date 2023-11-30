@@ -2,42 +2,26 @@
 utils::globalVariables("nil")
 
 `?` <- function(x, y) {
-  switch(
-    nargs(),
-    do.call(utils::`?`, list(substitute(x))),
-    {
-      e <- substitute(x)
-      if (is.call(e)) { # handle ? low precedence, loss of ~40% performance
-        switch(
-          as.character(e[[1]]),
-          "=" =, # handle nesting x <- y <- TRUE ? 10 ~ 5
-          "<-" = do.call("<-", list(e[[2]], call("?", e[[3]], if(is.logical(x)) y else substitute(y))), envir = parent.frame()),
-            if(is.logical(x)) {
-              .Call(ifelse, x, y, PACKAGE = "ask")
-            } else {
-              .Call(isas, x, substitute(y), PACKAGE = "ask")
-            }
-        )
-      } else {
-          if(is.logical(x)) {
-            .Call(ifelse, x, y, PACKAGE = "ask")
-          } else {
-            .Call(isas, x, substitute(y), PACKAGE = "ask")
-          }
-      }
-    }
-  )
+  missing(y) && return(do.call(utils::`?`, c(substitute(x))))
+  if (length(e <- substitute(x)) == 3L)
+    switch(
+      as.character(e[[1]]),
+      `<-` =, `=` = return( # elevate precedence
+do.call(`<-`, c(e[[2]], call("?", e[[3]], if(is.logical(x)) y else substitute(y))), envir = parent.frame())
+      )
+    )
+  if (is.logical(x)) .Call(ifelse, x, y) else .Call(isas, x, substitute(y))
 }
 
 ask <- function(threads = NULL, pct = NULL) {
   if (!nargs()) {
-    .Call(c_get_threads)
+    .Call(get_threads)
   } else if (pct ?! nil) {
     threads ? nil                       ?~! "Pass threads or pct, not both."
     length(pct) == 1L                   ?~! "Pass scalar pct value."
     !is.na(pct) & pct >= 0 & pct <= 100 ?~! "Pass pct value in [2, 100]."
-    .Call(c_set_threads, pct ?~ int, TRUE)
+    .Call(set_threads, pct ?~ int, TRUE)
   } else {
-    .Call(c_set_threads, threads ?~ int, FALSE)
+    .Call(set_threads, threads ?~ int, FALSE)
   }
 }

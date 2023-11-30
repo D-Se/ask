@@ -137,8 +137,8 @@ S vector_if(S x, S fml) {
     }
   } break;
   case VECSXP: {
-    const S *restrict pa = naa ? NULL : SEXPPTR_RO(a),
-            *restrict pb = nab ? NULL : SEXPPTR_RO(b);
+    const S *restrict pa = naa ? NULL : ((const S *)DATAPTR_RO(a)),
+            *restrict pb = nab ? NULL : ((const S *)DATAPTR_RO(b));
     for (int64_t i = 0; i < lx; ++i) {
       if (px[i] == NA_LOGICAL) {
         SET_VECTOR_ELT(ans, i, R_NilValue);
