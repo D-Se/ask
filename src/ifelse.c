@@ -25,15 +25,15 @@ S rhs(S fml) {
   if (isFormula(fml)) {
     switch(Rf_length(fml)) {
     case 2: {
-    SEXP expr = CADR(fml);
+    S expr = CADR(fml);
     if(TYPEOF(expr) == LANGSXP && CAR(expr) == Rf_install("!")) {  // x ?~! y
-      SEXP msg = CADR(expr);
+      S msg = CADR(expr);
       if (TYPEOF(msg) != STRSXP) {
         msg = Rf_eval(msg, ENV(fml));
       }
       Rf_errorcall(R_NilValue, "%s", str2char(msg)); // ensure string literal
     } else {
-      return Rf_eval(expr, ENV(fml));                              // ~x
+      return Rf_eval(expr, ENV(fml));                              // ~y
     }
     }
     case 3: return Rf_eval(CADDR(fml), ENV(fml));                  // x ~ y
@@ -92,7 +92,7 @@ S vector_if(S x, S fml) {
   // l - length, p - pointer, t - type, m - mask
   const S a = PROTECT(lhs(fml)),
           b = PROTECT(rhs(fml));
-
+  
   const int64_t lx = Rf_xlength(x),
                 la = Rf_xlength(a),
                 lb = Rf_xlength(b);

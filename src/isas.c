@@ -28,8 +28,6 @@ S as(S x, S fml) {
   }
 }
 
-// is
-
 ABB str2abb(S abb) {
   const char *s = CHAR(PRINTNAME(abb));
   for (int i = 0; AbbCheckTable[i].str; i++) {
@@ -84,7 +82,6 @@ S is(S x, S fml, bool negate) {
   return Rf_ScalarLogical(ans);
 }
 
-
 S isas(S x, S fml) {
   switch(TYPEOF(fml)) {
   case SYMSXP: return is(x, fml, false);                      // x ? t
@@ -94,6 +91,6 @@ S isas(S x, S fml) {
       is(x, CADR(fml), true) :                                // x ?! t
       as(x, fml);                                             // x ?~ t
   }
-  default: return Rf_ScalarLogical(0); // NULL ? NULL opens help, always false
+  default: return Rf_ScalarLogical(TYPEOF(x) == TYPEOF(fml));
   }
 }
