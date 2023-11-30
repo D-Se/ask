@@ -16,15 +16,14 @@ remotes::install_github("D-Se/ask")
 ## Usage
 
 ```r
-# ternary vectorized query operator with elevated precedence
+# ternary vectorized question with elevated precedence
 z <- TRUE ? 1 ~ 2
 
 x <- c(TRUE, FALSE, NA)
 a <- 1:3; b <- 4:6; c <- 7:9
-x ? a ~ {!x ? b ~ c}
 x ? a ~ (!x ? b ~ c)
 
-# check types using 3-letter abbreviations
+# check types using abbreviations
 5 ? num
 5 ?! num
 
@@ -42,6 +41,9 @@ FALSE ?~ 2
 TRUE ?~! "message"
 FALSE ?~! "message"
 
+# chain questions from left to right
+y <- ("1"?num ?~ "2"?chr ? 10 ~ 20)
+
 # search documentation like usual, except S4 methods
 ?integer
 ??regression
@@ -50,7 +52,7 @@ FALSE ?~! "message"
 ## Gotchas
 
 ```r
-# all queries must be of the same type
+# all questions must be of the same type
 x ? a ~ c(5, 6, 7)     # integer is not the same as numeric
 x ? a ~ !x ? b ~ c     # missing braces, precedence issue
 ```

@@ -1,15 +1,15 @@
 Package: ask
 Version: 0.0.2
-Title: Condition and Type Query Operator
-Description: Combine ? and ~ for simple conditional evaluation, type checks,
-        type conversions and documentation shortcuts. Optimize thought-to-code 
-        and communicative efficiency by using abbreviations and terse syntax.
+Title: Ternary Question Operator
+Description: Combine if-then-not ('?', '~', '!') to unify 'if', 'ifelse', 'is',
+        'as', 'stopifnot' and documentation search. Elegant, terse, yet fast,
+        the ternary question optimizes thought-to-code and code-to-thought, and
+        embraces the chain of questions and answers for unprecedented ease-of-use.
+Description: Write readable
 License: MIT + file LICENSE
 Imports: utils
 Suggests: tinytest
 Encoding: UTF-8
-Authors@R: c(
-  person("Donald", "Seinen",, "donaldseinen@proton.me", c("aut", "cre", "cph"))
-  )
+Authors@R: c(person("Donald", "Seinen",, "donaldseinen@proton.me", c("aut", "cre", "cph")))
 BugReports: https://github.com/D-Se/ask/issues
 RoxygenNote: 7.2.3
