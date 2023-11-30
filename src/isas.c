@@ -34,10 +34,15 @@ ABB str2abb(S abb) {
     if (!strcmp(s, AbbCheckTable[i].str))
       return (ABB) AbbCheckTable[i].abb;
   }
-  err("Abbreviation not found");                           // x ? bla
+  err("Abbreviation not found");                            // x ? bla
 }
 S is(S x, S fml, bool negate) {
   bool ans = false;
+  if (TYPEOF(fml) != SYMSXP) {                              // x ?! ""
+    ans = TYPEOF(x) == TYPEOF(fml);
+    if(negate) ans = !ans;
+    return Rf_ScalarLogical(ans);
+  }
   switch(str2abb(fml)) {
   // atomic
   case NILABB: ans = isNull(x);                 break;
@@ -86,8 +91,8 @@ S isas(S x, S fml) {
   switch(TYPEOF(fml)) {
   case SYMSXP: return is(x, fml, false);                      // x ? t
   case LANGSXP: {
-    S fun = CAR(fml);                                         // ?+, ?- {free}
-    return fun == Rf_install("!") ?
+    S fun = CAR(fml);
+    return fun == Rf_install("!") ?                           // ??, ?+, ?- free
       is(x, CADR(fml), true) :                                // x ?! t
       as(x, fml);                                             // x ?~ t
   }
