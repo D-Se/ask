@@ -92,3 +92,7 @@ for (i in seq_len(nrow(ask_as))) {
 error(1 ?~ huh, "Abbreviation")
 (1 ? num) := TRUE
 (1 ?! num) := FALSE
+
+(1 ? 1) := TRUE
+(1 ?! 1) := FALSE
+(1 ?! '') := TRUE
