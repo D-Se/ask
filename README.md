@@ -51,16 +51,6 @@ View help via ``` ?`?` ```.
 ```
 Atomic	Bunch	Lang	Other
 --------------------------------
-<<<<<<< HEAD
-atm	  rec	    lng	    na
-lgl  	lst	    sym	    nan
-int  	dfr	    exp	    nil
-num  	vec	    call    fin
-chr  	mtx	    name    inf
-raw  	arr	    fun	    ord
-cmp  	fct	    env	    prim
-dbl	 	fml	    tab
-=======
 atm	    rec	    lng	    na
 lgl	    lst	    sym	    nan
 int	    dfr	    exp	    nil
@@ -69,7 +59,6 @@ chr	    mtx	    name    inf
 raw	    arr	    fun	    ord
 cmp	    fct	    env	    prim
 dbl	    fml	    tab	    
->>>>>>> f09ae7b (type table spaces)
 ```
 
 `ask`:
