@@ -1,18 +1,21 @@
 .onUnload <- function(libpath) library.dynam.unload("ask", libpath) #nocov
-utils::globalVariables("nil")
 
 `?` <- function(x, y) {
-  missing(y) && return(do.call(utils::`?`, c(substitute(x))))
-  if (length(e <- substitute(x)) == 3L)
+  if(missing(y)) return(do.call(utils::`?`, c(substitute(x))))
+  if (length(e <- substitute(x)) == 3L) {
     switch(
       as.character(e[[1]]),
-      `<-` =, `=` = return( # elevate precedence
-do.call(`<-`, c(e[[2]], call("?", e[[3]], if(is.logical(x)) y else substitute(y))), envir = parent.frame())
-      )
+      `<-` =, `=` = return(assign( # elevate precedence
+          as.character(e[[2]]),
+          if (is.logical(x)) .Call(ifelse, x, y) else .Call(isas, x, substitute(y)),
+          envir = parent.frame()
+        ))
     )
+  }
   if (is.logical(x)) .Call(ifelse, x, y) else .Call(isas, x, substitute(y))
 }
 
+utils::globalVariables("nil")
 ask <- function(threads = NULL, pct = NULL) {
   if (!nargs()) {
     .Call(get_threads)
