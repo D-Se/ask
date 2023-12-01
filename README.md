@@ -51,7 +51,7 @@ View help via ``` ?`?` ```.
 ```
 Atomic	Bunch	Lang	Other
 --------------------------------
-atm	    rec	    lng	    na
+atm	  rec	    lng	    na
 lgl  	lst	    sym	    nan
 int  	dfr	    exp	    nil
 num  	vec	    call    fin
