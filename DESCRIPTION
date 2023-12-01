@@ -2,10 +2,9 @@ Package: ask
 Version: 0.0.2
 Title: Ternary Question Operator
 Description: Combine if-then-not ('?', '~', '!') to unify 'if', 'ifelse', 'is',
-        'as', 'stopifnot' and documentation search. Elegant, terse, yet fast,
-        the ternary question optimizes thought-to-code and code-to-thought, and
-        embraces the chain of questions and answers for unprecedented ease-of-use.
-Description: Write readable
+          'as', 'stopifnot' and documentation search. Elegant, terse, yet fast,
+          the ternary question optimizes thought-to-code and code-to-thought, and
+          embraces the chain of questions and answers for unprecedented ease-of-use.
 License: MIT + file LICENSE
 Imports: utils
 Suggests: tinytest
