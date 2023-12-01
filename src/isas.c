@@ -1,8 +1,8 @@
 #include "ask.h"
 #include "abb.h"
 
-const static struct {const char * const str; const int sexp;}
-AbbCoerceTable[] = {
+const static struct {char const * const str; const int sexp;}
+AsTable[] = {
   {"num",	REALSXP},  {"chr", STRSXP}, {"int", INTSXP},  {"lgl",	LGLSXP},
   {"nil",	NILSXP},   {"sym", SYMSXP}, {"env", ENVSXP},  {"dbl",	REALSXP},
   {"cmp",	CPLXSXP},  {"any", ANYSXP}, {"exp", EXPRSXP}, {"lst",	VECSXP},
@@ -12,9 +12,8 @@ AbbCoerceTable[] = {
 
 SEXPTYPE str2sexp(S abb) {
   const char *s = CHAR(PRINTNAME(abb));
-  for (int i = 0; AbbCoerceTable[i].str; i++) {
-    if (!strcmp(s, AbbCoerceTable[i].str))
-      return (SEXPTYPE) AbbCoerceTable[i].sexp;
+  for (int i = 0; AsTable[i].str; ++i) {
+    if (!strcmp(s, AsTable[i].str)) return (SEXPTYPE) AsTable[i].sexp;
   }
   err("Abbreviation not found");                           // x ?~ bla
 }
@@ -30,9 +29,8 @@ S as(S x, S fml) {
 
 ABB str2abb(S abb) {
   const char *s = CHAR(PRINTNAME(abb));
-  for (int i = 0; AbbCheckTable[i].str; i++) {
-    if (!strcmp(s, AbbCheckTable[i].str))
-      return (ABB) AbbCheckTable[i].abb;
+  for (int i = 0; IsTable[i].str; ++i) {
+    if (!strcmp(s, IsTable[i].str)) return (ABB) IsTable[i].abb;
   }
   err("Abbreviation not found");                            // x ? bla
 }
@@ -89,12 +87,12 @@ S is(S x, S fml, bool negate) {
 
 S isas(S x, S fml) {
   switch(TYPEOF(fml)) {
-  case SYMSXP: return is(x, fml, false);                      // x ? t
+  case SYMSXP: return is(x, fml, false);                    // x ? t
   case LANGSXP: {
     S fun = CAR(fml);
-    return fun == Rf_install("!") ?                           // ??, ?+, ?- free
-      is(x, CADR(fml), true) :                                // x ?! t
-      as(x, fml);                                             // x ?~ t
+    return fun == Rf_install("!") ?                         // ??, ?+, ?- free
+      is(x, CADR(fml), true) :                              // x ?! t
+      as(x, fml);                                           // x ?~ t
   }
   default: return Rf_ScalarLogical(TYPEOF(x) == TYPEOF(fml));
   }

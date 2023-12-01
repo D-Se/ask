@@ -17,20 +17,20 @@ void init_ask_threads(void) {
   ask_throttle = 1024;
 }
 
-int get_threads(const int n, const bool throttle) {
+int nthreads(int n, bool throttle) {
   if (n < 1) return 1;
   int ans = throttle ? 1 + (n - 1) / ask_throttle : n;
   return ans >= ask_threads ? ask_threads : ans;
 }
 
-S get_threads_R() { return ScalarInteger(get_threads(INT_MAX, false)); }
+S get_threads() { return ScalarInteger(nthreads(INT_MAX, false)); }
 
 S set_threads(S threads, S percent) {
-  if (!length(threads)){
+  if (!length(threads)) {
     init_ask_threads();
-  } else if (length(threads)) {
-    int n = 0;
-    if (length(threads) != 1 || !isInteger(threads) || (n = INTEGER(threads)[0]) < 0) {
+  } else {
+    int n = INTEGER(threads)[0];
+    if (length(threads) != 1 || !isInteger(threads) || n < 0) {
       err("Valid thread values: NULL, n >= 0.");
     }
     int num_procs = max(omp_get_num_procs(), 1);
@@ -40,8 +40,7 @@ S set_threads(S threads, S percent) {
     } else {
       if (n == 0 || n > num_procs) n = num_procs;
     }
-    n = min(n, INT_MAX);
-    ask_threads = max(n, 1);
+    ask_threads = max(min(n, INT_MAX), 1);
   }
   return ScalarInteger(ask_threads);
 }

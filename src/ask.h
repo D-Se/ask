@@ -7,7 +7,7 @@
 
 #ifdef _OPENMP
   #include <omp.h> // -fopenmp by Makevars files
-  #define OMP_FOR(lx) _Pragma("omp parallel for num_threads(get_threads(lx, true))")
+  #define OMP_FOR(lx) _Pragma("omp parallel for num_threads(nthreads(lx, true))")
 #else
   #define omp_get_max_threads()  1
   #define omp_get_thread_limit() 1
@@ -21,14 +21,13 @@
 #define err(x) Rf_errorcall(R_NilValue, x)
 
 // internals
-int get_threads(const int n, const bool throttle);
+int nthreads(int n, bool throttle);
 void init_ask_threads(void);
-bool isFormula(S);
+bool isFormula(S x);
 
 // API
-S isas(S, S);
-S ifelse(S, S);
-S get_threads_R(void);
-S set_threads(S, S);
-
+S isas(S x, S formula);
+S ifelse(S x, S formula);
+S get_threads(void);
+S set_threads(S threads, S percent);
 #endif

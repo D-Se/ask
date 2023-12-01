@@ -1,4 +1,4 @@
-#define ABBS                                                                  \
+#define ABBREVIATIONS                                                         \
 /* atomic */                                                                  \
 X(NILABB, "nil")    X(INTABB, "int")    X(LGLABB, "lgl")    X(DBLABB, "dbl")  \
 X(STRABB, "str")    X(CHRABB, "chr")    X(CPLABB, "cpl")    X(RAWABB, "raw")  \
@@ -20,18 +20,18 @@ X(TBLABB, "tbl")                                                              \
   
 typedef enum {
 #define X(a, b) a,
-    ABBS
+  ABBREVIATIONS
 #undef X
     NUM_ABBS
-  } ABB;
+} ABB;
 
-#define X(a, b) { a, b },
 const static struct {
   const int abb;
   const char *str;
-} AbbCheckTable[] = {
-  ABBS
-};
+} IsTable[] = {
+#define X(a, b) { a, b },
+  ABBREVIATIONS
 #undef X
+};
 
-_Static_assert(NUM_ABBS == sizeof AbbCheckTable/sizeof *AbbCheckTable, "error");
+_Static_assert(NUM_ABBS == sizeof IsTable/sizeof *IsTable, "error");

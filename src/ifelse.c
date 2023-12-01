@@ -6,15 +6,12 @@ bool isFormula(S x) {return TYPEOF(x) == LANGSXP && Rf_inherits(x, "formula");}
 S ENV(S fml) {return Rf_getAttrib(fml, Rf_install(".Environment"));}
 
 S lhs(S fml) {
-  if (isFormula(fml)) {
-    switch(Rf_length(fml)) {
-    case 2: return R_NilValue;                                    // T ?~ 1
-    case 3: return Rf_eval(CADR(fml), ENV(fml));                  // T ? x ~ y
-    default: err("Malformed `~` in `?`.");
-    };
-  } else {
-    return fml; // default NULL at R level                           T ? x
-  }
+  if (!isFormula(fml)) return fml; // default NULL at R level       T ? x
+  switch(Rf_length(fml)) {
+  case 2: return R_NilValue;                                     // T ?~ 1
+  case 3: return Rf_eval(CADR(fml), ENV(fml));                   // T ? x ~ y
+  default: err("Malformed `~` in `?`.");
+  };
 }
 
 const char * str2char(S s) {
@@ -22,26 +19,21 @@ const char * str2char(S s) {
 }
 
 S rhs(S fml) {
-  if (isFormula(fml)) {
-    switch(Rf_length(fml)) {
-    case 2: {
+  if(!isFormula(fml)) return R_NilValue;
+  switch(Rf_length(fml)) {
+  case 2: {
     S expr = CADR(fml);
     if(TYPEOF(expr) == LANGSXP && CAR(expr) == Rf_install("!")) {  // x ?~! y
       S msg = CADR(expr);
-      if (TYPEOF(msg) != STRSXP) {
-        msg = Rf_eval(msg, ENV(fml));
-      }
+      if (TYPEOF(msg) != STRSXP) msg = Rf_eval(msg, ENV(fml));
       Rf_errorcall(R_NilValue, "%s", str2char(msg)); // ensure string literal
     } else {
-      return Rf_eval(expr, ENV(fml));                              // ~y
+      return Rf_eval(expr, ENV(fml));                             // ~y
     }
-    }
-    case 3: return Rf_eval(CADDR(fml), ENV(fml));                  // x ~ y
-    default: err("Malformed `~` in `?`.");
-    };
-  } else {
-    return R_NilValue;
   }
+  case 3: return Rf_eval(CADDR(fml), ENV(fml));                   // x ~ y
+  default: err("Malformed `~` in `?`.");
+  };
 }
 
 S scalar_if(S x, S fml) {
@@ -103,8 +95,8 @@ S vector_if(S x, S fml) {
   // omit length check to support nested (case_when) behavior.
   //if (la != lb) err("Mismatch lhs and rhs: Length.");
   if (ta != tb) {
-    const char* ma = type2char(ta);
-    Rf_errorcall(R_NilValue, "Type mismatch lhs (%s) and rhs (%s)", type2char(ta), type2char(tb));
+    const char* msg = "Type mismatch lhs (%s) and rhs (%s)";
+    Rf_errorcall(R_NilValue, msg, type2char(ta), type2char(tb));
   }
   const bool naa = la == 1 && ta == LGLSXP && LOGICAL(a)[0] == NA_LOGICAL,
              nab = lb == 1 && tb == LGLSXP && LOGICAL(b)[0] == NA_LOGICAL,
