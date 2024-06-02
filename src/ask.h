@@ -30,4 +30,5 @@ S isas(S x, S formula);
 S ifelse(S x, S formula);
 S get_threads(void);
 S set_threads(S threads, S percent);
+S delphi(S x, S formula);
 #endif

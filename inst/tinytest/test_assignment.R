@@ -64,3 +64,4 @@ num <- +num ?~ lgl
 num := FALSE
 num <- (!num ?~! "nope")
 num := NULL
+
